@@ -1,0 +1,6 @@
+{
+  "name": "VStudyHub - JEE & NEET Prep",
+  "description": "Comprehensive study portal for JEE & NEET aspirants featuring subject notes, formula sheets, daily practice, and exam strategies.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,40 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // User profile documents
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+    
+    // Per-user study progress, bookmarks, and tasks
+    match /userProgress/{userId} {
+      allow read, write: if true;
+    }
+
+    // Leaderboard entries across India
+    match /leaderboard/{docId} {
+      allow read, write: if true;
+    }
+
+    // Admin & Faculty managed chapter notes
+    match /notes/{noteId} {
+      allow read, write: if true;
+    }
+
+    // Admin & Faculty managed formula bank
+    match /formulas/{formulaId} {
+      allow read, write: if true;
+    }
+
+    // Admin & Faculty managed practice quizzes
+    match /quizzes/{quizId} {
+      allow read, write: if true;
+    }
+
+    // AI Doubt chat history per user
+    match /aiDoubts/{messageId} {
+      allow read, write: if true;
+    }
+  }
+}

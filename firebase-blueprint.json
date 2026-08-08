@@ -1,0 +1,114 @@
+{
+  "entities": {
+    "users": {
+      "title": "User Profiles",
+      "description": "Student and faculty profiles",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["student", "teacher", "admin"] },
+        "avatarUrl": { "type": "string" },
+        "targetExam": { "type": "string" },
+        "classLevel": { "type": "string" },
+        "targetRankGoal": { "type": "string" },
+        "targetCollege": { "type": "string" },
+        "xp": { "type": "number" },
+        "level": { "type": "number" },
+        "levelTitle": { "type": "string" },
+        "badges": { "type": "array" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["name", "email", "role", "xp", "level"]
+    },
+    "userProgress": {
+      "title": "User Study Progress",
+      "description": "Per-user active study statistics, bookmarks, tasks, and weak topics",
+      "type": "object",
+      "properties": {
+        "selectedExam": { "type": "string" },
+        "selectedClass": { "type": "string" },
+        "dailyGoalMins": { "type": "number" },
+        "todayStudiedMins": { "type": "number" },
+        "streakDays": { "type": "number" },
+        "lastActiveDate": { "type": "string" },
+        "completedChapters": { "type": "array" },
+        "weakTopics": { "type": "array" },
+        "todayTasks": { "type": "array" },
+        "bookmarkedFormulas": { "type": "array" },
+        "bookmarkedNotes": { "type": "array" },
+        "recentlyViewedNotes": { "type": "array" },
+        "quizScores": { "type": "array" },
+        "flashcardStats": { "type": "array" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["streakDays", "bookmarkedFormulas", "bookmarkedNotes"]
+    },
+    "leaderboard": {
+      "title": "Leaderboard Rankings",
+      "description": "Public leaderboard entries for students across India",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "exam": { "type": "string" },
+        "college": { "type": "string" },
+        "xp": { "type": "number" },
+        "avatar": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["name", "xp"]
+    },
+    "notes": {
+      "title": "Chapter Notes",
+      "description": "Educational chapter notes managed by faculty/admin",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "chapterId": { "type": "string" },
+        "topicId": { "type": "string" },
+        "title": { "type": "string" },
+        "subjectId": { "type": "string" },
+        "classLevel": { "type": "string" },
+        "applicableExams": { "type": "array" },
+        "overview": { "type": "string" },
+        "sections": { "type": "array" },
+        "summaryTakeaways": { "type": "array" },
+        "lastUpdated": { "type": "string" }
+      },
+      "required": ["title", "subjectId", "chapterId"]
+    },
+    "formulas": {
+      "title": "Formula Bank",
+      "description": "Formula entries with LaTeX and exam tips",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "subjectId": { "type": "string" },
+        "chapterName": { "type": "string" },
+        "latex": { "type": "string" },
+        "description": { "type": "string" },
+        "variables": { "type": "array" },
+        "examTips": { "type": "string" },
+        "category": { "type": "string" }
+      },
+      "required": ["title", "latex"]
+    },
+    "quizzes": {
+      "title": "Practice Quizzes",
+      "description": "Chapter quizzes with questions, options and explanations",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "subjectId": { "type": "string" },
+        "chapterId": { "type": "string" },
+        "chapterName": { "type": "string" },
+        "questions": { "type": "array" }
+      },
+      "required": ["title", "questions"]
+    }
+  }
+}
