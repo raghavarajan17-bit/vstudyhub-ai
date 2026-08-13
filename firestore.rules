@@ -36,5 +36,13 @@ service cloud.firestore {
     match /aiDoubts/{messageId} {
       allow read, write: if true;
     }
+
+    // Publicly accessible Blog Posts (Read-only for public visitors)
+    match /blogPosts/{postId} {
+      allow read: if true;
+      allow write: if (
+        request.auth != null && request.auth.token.email == "raghavarajan17@gmail.com"
+      );
+    }
   }
 }
