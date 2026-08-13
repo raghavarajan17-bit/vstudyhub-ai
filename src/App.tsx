@@ -14,6 +14,7 @@ import { GamificationView } from './components/GamificationView';
 import { AdminPanelView } from './components/AdminPanelView';
 import { StudentAccountModal } from './components/StudentAccountModal';
 import { GlobalSearchModal } from './components/GlobalSearchModal';
+import { BlogView } from './components/BlogView';
 
 import { ExamType, ClassLevel, SubjectId, UserProgress, StudentProfile } from './types';
 import { getStoredProgress, saveStoredProgress } from './lib/storage';
@@ -30,6 +31,38 @@ export default function App() {
   const [isAccountModalOpen, setIsAccountModalOpen] = useState<boolean>(false);
   const [darkMode, setDarkMode] = useState<boolean>(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [initialBlogSlug, setInitialBlogSlug] = useState<string | null>(null);
+
+  // Sync initial URL path and listen for popstate
+  useEffect(() => {
+    const handleUrlSync = () => {
+      const path = window.location.pathname;
+      if (path === '/blog' || path.startsWith('/blog/')) {
+        setActiveTab('blog');
+        const parts = path.split('/blog/');
+        if (parts[1]) {
+          setInitialBlogSlug(decodeURIComponent(parts[1]));
+        } else {
+          setInitialBlogSlug(null);
+        }
+      }
+    };
+
+    handleUrlSync();
+    window.addEventListener('popstate', handleUrlSync);
+    return () => window.removeEventListener('popstate', handleUrlSync);
+  }, []);
+
+  // Handler for tab selection with URL pushstate
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    if (tab !== 'subjects') setActiveNoteId(null);
+    if (tab === 'blog') {
+      window.history.pushState({}, '', '/blog');
+    } else if (tab === 'home') {
+      window.history.pushState({}, '', '/');
+    }
+  };
 
   // Initialize Firebase Auth listener
   useEffect(() => {
@@ -152,10 +185,7 @@ export default function App() {
         selectedClass={userProgress.selectedClass}
         onClassChange={handleClassChange}
         activeTab={activeTab}
-        onTabChange={(tab) => {
-          setActiveTab(tab);
-          if (tab !== 'subjects') setActiveNoteId(null);
-        }}
+        onTabChange={handleTabChange}
         onOpenSearch={() => setIsSearchOpen(true)}
         onOpenAccountModal={() => setIsAccountModalOpen(true)}
         profile={userProgress.profile}
@@ -176,10 +206,7 @@ export default function App() {
               selectedClass={userProgress.selectedClass}
               onClassChange={handleClassChange}
               onOpenSearch={() => setIsSearchOpen(true)}
-              onTabChange={(tab) => {
-                setActiveTab(tab);
-                if (tab !== 'subjects') setActiveNoteId(null);
-              }}
+              onTabChange={handleTabChange}
             />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -189,7 +216,7 @@ export default function App() {
                   setSelectedSubjectId(subId);
                   setActiveNoteId(null);
                 }}
-                onTabChange={setActiveTab}
+                onTabChange={handleTabChange}
               />
             </div>
           </div>
@@ -218,7 +245,7 @@ export default function App() {
                   setActiveQuizChapterId(chId);
                   setActiveTab('quizzes');
                 }}
-                onTabChange={setActiveTab}
+                onTabChange={handleTabChange}
               />
             )}
           </div>
@@ -231,6 +258,18 @@ export default function App() {
               selectedExam={userProgress.selectedExam}
               bookmarkedFormulaIds={userProgress.bookmarkedFormulas}
               onToggleBookmark={handleToggleFormulaBookmark}
+            />
+          </div>
+        )}
+
+        {/* Blog Tab */}
+        {activeTab === 'blog' && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <BlogView
+              initialSlug={initialBlogSlug}
+              onOpenAiWithContext={(ctx) => {
+                setActiveTab('ai-tutor');
+              }}
             />
           </div>
         )}
@@ -318,10 +357,7 @@ export default function App() {
 
       {/* Footer */}
       <Footer
-        onTabChange={(tab) => {
-          setActiveTab(tab);
-          if (tab !== 'subjects') setActiveNoteId(null);
-        }}
+        onTabChange={handleTabChange}
         onExamChange={handleExamChange}
       />
 

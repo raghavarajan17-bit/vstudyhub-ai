@@ -73,9 +73,21 @@ Choose your preferred teaching mode below and ask any question!`,
         }),
       });
 
+      if (!response.ok) {
+        let errMessage = `HTTP ${response.status} ${response.statusText}`;
+        try {
+          const errData = await response.json();
+          if (errData.error) errMessage = errData.error;
+        } catch (_) {
+          const rawText = await response.text();
+          if (rawText) errMessage += `: ${rawText.substring(0, 100)}`;
+        }
+        throw new Error(errMessage);
+      }
+
       const data = await response.json();
 
-      if (data.success) {
+      if (data.success && data.solutionText) {
         const assistantMsg: AiDoubtMessage = {
           id: `ai-${Date.now()}`,
           sender: 'assistant',
@@ -87,7 +99,7 @@ Choose your preferred teaching mode below and ask any question!`,
         const errorMsg: AiDoubtMessage = {
           id: `ai-err-${Date.now()}`,
           sender: 'assistant',
-          text: `⚠️ Error: ${data.error || 'Failed to solve doubt. Please ensure GEMINI_API_KEY is configured in Settings.'}`,
+          text: `⚠️ Error: ${data.error || 'Failed to solve doubt. Please ensure GEMINI_API_KEY is configured.'}`,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         };
         setMessages((prev) => [...prev, errorMsg]);
@@ -96,7 +108,7 @@ Choose your preferred teaching mode below and ask any question!`,
       const errorMsg: AiDoubtMessage = {
         id: `ai-err-${Date.now()}`,
         sender: 'assistant',
-        text: '⚠️ Network connection issue. Could not reach VStudy AI server.',
+        text: `⚠️ AI Service Error: ${err?.message || 'Could not reach VStudy AI server.'}`,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
       setMessages((prev) => [...prev, errorMsg]);

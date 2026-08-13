@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Atom, Search, Flame, Moon, Sun, Menu, X, Sparkles, BookOpen, 
-  Calculator, BrainCircuit, HelpCircle, Trophy, Layers, Filter, User, Award, Shield
+  Calculator, BrainCircuit, HelpCircle, Trophy, Layers, Filter, User, Award, Shield, Newspaper
 } from 'lucide-react';
 import { ExamType, ClassLevel, StudentProfile } from '../types';
 
@@ -41,6 +41,7 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'progress', label: 'Dashboard', icon: Trophy },
     { id: 'subjects', label: 'Subjects & Notes', icon: Layers },
     { id: 'formulas', label: 'Formulas', icon: Calculator },
+    { id: 'blog', label: 'Blog', icon: Newspaper },
     { id: 'ai-tutor', label: 'AI Tutor', icon: Sparkles, badge: 'AI' },
     { id: 'gamification', label: 'Leaderboard', icon: Award },
     { id: 'quizzes', label: 'Quizzes', icon: HelpCircle },

@@ -88,6 +88,11 @@ export const Footer: React.FC<FooterProps> = ({ onTabChange, onExamChange }) => 
                 </button>
               </li>
               <li>
+                <button onClick={() => onTabChange('blog')} className="hover:text-blue-400 transition-colors">
+                  Blog & Exam Strategy Articles
+                </button>
+              </li>
+              <li>
                 <button onClick={() => onTabChange('flashcards')} className="hover:text-white transition-colors">
                   Active Recall Flashcards
                 </button>
