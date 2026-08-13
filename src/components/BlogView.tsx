@@ -309,6 +309,37 @@ export const BlogView: React.FC<BlogViewProps> = ({ initialSlug, onOpenAiWithCon
 
   // Custom text renderer for formatting content with Markdown-style support
   // Custom text renderer for formatting Markdown-style article content
+// Format inline Markdown such as **bold**
+const formatInlineText = (text: string): React.ReactNode => {
+  const cleaned = text
+    .replace(/\\:/g, ':')
+    .replace(/\\\*/g, '*')
+    .trim();
+
+  const parts = cleaned.split(/(\*\*[^*]+\*\*)/g);
+
+  return parts.map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return (
+        <strong
+          key={index}
+          className="font-bold text-slate-900 dark:text-white"
+        >
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+
+    return (
+      <React.Fragment key={index}>
+        {part}
+      </React.Fragment>
+    );
+  });
+};
+
+
+// Render formatted article content
 const renderFormattedContent = (content?: string | null) => {
   // Prevent blank article bodies
   if (!content || !content.trim()) {
@@ -319,102 +350,179 @@ const renderFormattedContent = (content?: string | null) => {
     );
   }
 
-  const paragraphs = content.split(/\n\s*\n/);
+  // Clean content coming from Firestore
+  const cleanedContent = content
+    .replace(/\\:/g, ':')
+    .replace(/\\n/g, '\n')
+    .trim();
 
-  return paragraphs.map((para, idx) => {
-    const trimmed = para.trim();
+  const lines = cleanedContent.split(/\r?\n/);
 
-    if (!trimmed) {
-      return null;
-    }
+  const elements: React.ReactNode[] = [];
 
-    // H1
-    if (trimmed.startsWith('# ')) {
-      return (
-        <h1
-          key={idx}
-          className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-6 mb-3"
+  let paragraphLines: string[] = [];
+  let listItems: string[] = [];
+  let listType: 'ul' | 'ol' | null = null;
+
+  // Finish paragraph
+  const flushParagraph = () => {
+    if (paragraphLines.length === 0) return;
+
+    const text = paragraphLines.join(' ').trim();
+
+    if (text) {
+      elements.push(
+        <p
+          key={`paragraph-${elements.length}`}
+          className="text-slate-800 dark:text-slate-200 text-base leading-8 my-4"
         >
-          {trimmed.substring(2)}
-        </h1>
+          {formatInlineText(text)}
+        </p>
       );
     }
 
-    // H2
-    if (trimmed.startsWith('## ')) {
-      return (
-        <h2
-          key={idx}
-          className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-100 mt-6 mb-3 pb-2 border-b border-slate-100 dark:border-slate-800"
+    paragraphLines = [];
+  };
+
+  // Finish list
+  const flushList = () => {
+    if (listItems.length === 0) return;
+
+    if (listType === 'ol') {
+      elements.push(
+        <ol
+          key={`ordered-list-${elements.length}`}
+          className="list-decimal pl-6 space-y-2 my-4 text-slate-800 dark:text-slate-200"
         >
-          {trimmed.substring(3)}
-        </h2>
+          {listItems.map((item, index) => (
+            <li key={index}>
+              {formatInlineText(item)}
+            </li>
+          ))}
+        </ol>
       );
-    }
-
-    // H3
-    if (trimmed.startsWith('### ')) {
-      return (
-        <h3
-          key={idx}
-          className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-4 mb-2"
-        >
-          {trimmed.substring(4)}
-        </h3>
-      );
-    }
-
-    // Bullet list
-    if (
-      trimmed.startsWith('- ') ||
-      trimmed.startsWith('* ')
-    ) {
-      const items = trimmed
-        .split('\n')
-        .map((item) => item.replace(/^[-*]\s+/, ''))
-        .filter(Boolean);
-
-      return (
+    } else {
+      elements.push(
         <ul
-          key={idx}
-          className="list-disc list-inside space-y-1.5 my-3 pl-2 text-slate-700 dark:text-slate-300"
+          key={`unordered-list-${elements.length}`}
+          className="list-disc pl-6 space-y-2 my-4 text-slate-800 dark:text-slate-200"
         >
-          {items.map((item, i) => (
-            <li key={i}>{item}</li>
+          {listItems.map((item, index) => (
+            <li key={index}>
+              {formatInlineText(item)}
+            </li>
           ))}
         </ul>
       );
     }
 
-    // Numbered list
-    if (/^\d+\.\s/.test(trimmed)) {
-      const items = trimmed
-        .split('\n')
-        .map((item) => item.replace(/^\d+\.\s+/, ''))
-        .filter(Boolean);
+    listItems = [];
+    listType = null;
+  };
 
-      return (
-        <ol
-          key={idx}
-          className="list-decimal list-inside space-y-1.5 my-3 pl-2 text-slate-700 dark:text-slate-300"
-        >
-          {items.map((item, i) => (
-            <li key={i}>{item}</li>
-          ))}
-        </ol>
-      );
+  lines.forEach((rawLine) => {
+    const line = rawLine.trim();
+
+    // Empty line
+    if (!line) {
+      flushParagraph();
+      flushList();
+      return;
     }
 
-    // Normal paragraph
-    return (
-      <p
-        key={idx}
-        className="text-slate-800 dark:text-slate-200 text-base leading-relaxed whitespace-pre-line my-3"
-      >
-        {trimmed}
-      </p>
-    );
+    // H1
+    if (line.startsWith('# ')) {
+      flushParagraph();
+      flushList();
+
+      elements.push(
+        <h1
+          key={`h1-${elements.length}`}
+          className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-8 mb-4"
+        >
+          {formatInlineText(line.substring(2))}
+        </h1>
+      );
+
+      return;
+    }
+
+    // H2
+    if (line.startsWith('## ')) {
+      flushParagraph();
+      flushList();
+
+      elements.push(
+        <h2
+          key={`h2-${elements.length}`}
+          className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-100 mt-8 mb-4 pb-2 border-b border-slate-200 dark:border-slate-800"
+        >
+          {formatInlineText(line.substring(3))}
+        </h2>
+      );
+
+      return;
+    }
+
+    // H3
+    if (line.startsWith('### ')) {
+      flushParagraph();
+      flushList();
+
+      elements.push(
+        <h3
+          key={`h3-${elements.length}`}
+          className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-6 mb-3"
+        >
+          {formatInlineText(line.substring(4))}
+        </h3>
+      );
+
+      return;
+    }
+
+    // Bullet list
+    if (/^[-*]\s+/.test(line)) {
+      flushParagraph();
+
+      if (listType !== 'ul') {
+        flushList();
+        listType = 'ul';
+      }
+
+      listItems.push(
+        line.replace(/^[-*]\s+/, '')
+      );
+
+      return;
+    }
+
+    // Numbered list
+    if (/^\d+\.\s+/.test(line)) {
+      flushParagraph();
+
+      if (listType !== 'ol') {
+        flushList();
+        listType = 'ol';
+      }
+
+      listItems.push(
+        line.replace(/^\d+\.\s+/, '')
+      );
+
+      return;
+    }
+
+    // Normal paragraph text
+    flushList();
+    paragraphLines.push(line);
   });
+
+  // Flush remaining content
+  flushParagraph();
+  flushList();
+
+  return elements;
 };
   // RENDER: Full Article Detail View
   if (activePost) {
@@ -484,9 +592,12 @@ const renderFormattedContent = (content?: string | null) => {
           )}
 
           {/* Formatted Article Body */}
-          <div className="pt-2">
-            {renderFormattedContent(activePost.content)}
-          </div>
+         {/* Article Body */}
+<div className="pt-2">
+  <div className="prose prose-slate dark:prose-invert max-w-none">
+    {renderFormattedContent(activePost.content)}
+  </div>
+</div>
 
           {/* Tags */}
           {activePost.tags && activePost.tags.length > 0 && (
