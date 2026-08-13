@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { 
   BookOpen, Search, Clock, Calendar, User, Tag, ArrowLeft, 
   Share2, Check, Sparkles, RefreshCw, AlertCircle, ChevronRight, Filter,
@@ -308,56 +308,114 @@ export const BlogView: React.FC<BlogViewProps> = ({ initialSlug, onOpenAiWithCon
   };
 
   // Custom text renderer for formatting content with Markdown-style support
-  const renderFormattedContent = (content: string) => {
-    const paragraphs = content.split('\n\n');
-    return paragraphs.map((para, idx) => {
-      const trimmed = para.trim();
-      
-      // H1 Header
-      if (trimmed.startsWith('# ')) {
-        return (
-          <h1 key={idx} className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-6 mb-3">
-            {trimmed.substring(2)}
-          </h1>
-        );
-      }
-      // H2 Header
-      if (trimmed.startsWith('## ')) {
-        return (
-          <h2 key={idx} className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-100 mt-6 mb-3 pb-2 border-b border-slate-100 dark:border-slate-800">
-            {trimmed.substring(3)}
-          </h2>
-        );
-      }
-      // H3 Header
-      if (trimmed.startsWith('### ')) {
-        return (
-          <h3 key={idx} className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-4 mb-2">
-            {trimmed.substring(4)}
-          </h3>
-        );
-      }
-      // Bullet lists
-      if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
-        const items = trimmed.split('\n').map((item) => item.replace(/^[-*]\s+/, ''));
-        return (
-          <ul key={idx} className="list-disc list-inside space-y-1.5 my-3 pl-2 text-slate-700 dark:text-slate-300">
-            {items.map((item, i) => (
-              <li key={i}>{item}</li>
-            ))}
-          </ul>
-        );
-      }
+  // Custom text renderer for formatting Markdown-style article content
+const renderFormattedContent = (content?: string | null) => {
+  // Prevent blank article bodies
+  if (!content || !content.trim()) {
+    return (
+      <div className="p-5 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-200">
+        Article content is currently unavailable.
+      </div>
+    );
+  }
 
-      // Paragraph with bolding support
+  const paragraphs = content.split(/\n\s*\n/);
+
+  return paragraphs.map((para, idx) => {
+    const trimmed = para.trim();
+
+    if (!trimmed) {
+      return null;
+    }
+
+    // H1
+    if (trimmed.startsWith('# ')) {
       return (
-        <p key={idx} className="text-slate-800 dark:text-slate-200 text-base leading-relaxed whitespace-pre-line my-3">
-          {trimmed}
-        </p>
+        <h1
+          key={idx}
+          className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-6 mb-3"
+        >
+          {trimmed.substring(2)}
+        </h1>
       );
-    });
-  };
+    }
 
+    // H2
+    if (trimmed.startsWith('## ')) {
+      return (
+        <h2
+          key={idx}
+          className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-100 mt-6 mb-3 pb-2 border-b border-slate-100 dark:border-slate-800"
+        >
+          {trimmed.substring(3)}
+        </h2>
+      );
+    }
+
+    // H3
+    if (trimmed.startsWith('### ')) {
+      return (
+        <h3
+          key={idx}
+          className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-4 mb-2"
+        >
+          {trimmed.substring(4)}
+        </h3>
+      );
+    }
+
+    // Bullet list
+    if (
+      trimmed.startsWith('- ') ||
+      trimmed.startsWith('* ')
+    ) {
+      const items = trimmed
+        .split('\n')
+        .map((item) => item.replace(/^[-*]\s+/, ''))
+        .filter(Boolean);
+
+      return (
+        <ul
+          key={idx}
+          className="list-disc list-inside space-y-1.5 my-3 pl-2 text-slate-700 dark:text-slate-300"
+        >
+          {items.map((item, i) => (
+            <li key={i}>{item}</li>
+          ))}
+        </ul>
+      );
+    }
+
+    // Numbered list
+    if (/^\d+\.\s/.test(trimmed)) {
+      const items = trimmed
+        .split('\n')
+        .map((item) => item.replace(/^\d+\.\s+/, ''))
+        .filter(Boolean);
+
+      return (
+        <ol
+          key={idx}
+          className="list-decimal list-inside space-y-1.5 my-3 pl-2 text-slate-700 dark:text-slate-300"
+        >
+          {items.map((item, i) => (
+            <li key={i}>{item}</li>
+          ))}
+        </ol>
+      );
+    }
+
+    // Normal paragraph
+    return (
+      <p
+        key={idx}
+        className="text-slate-800 dark:text-slate-200 text-base leading-relaxed whitespace-pre-line my-3"
+      >
+        {trimmed}
+      </p>
+    );
+  });
+};
   // RENDER: Full Article Detail View
   if (activePost) {
     return (

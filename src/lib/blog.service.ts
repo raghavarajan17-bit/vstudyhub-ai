@@ -18,20 +18,33 @@ export function normalizeBlogPost(id: string, data: any): BlogPost {
     tags = data.tags.split(',').map((s) => s.trim()).filter(Boolean);
   }
 
-  return {
-    id,
-    title: data.title || 'Untitled Article',
-    slug: data.slug || id,
-    excerpt: data.excerpt || '',
-    content: data.content || '',
-    category: data.category || 'Physics',
-    tags: tags.length > 0 ? tags : ['JEE', 'NEET'],
-    published: Boolean(data.published),
-    author: data.author || 'VStudyHub',
-    readingTime: data.readingTime || 2,
-    createdAt: data.createdAt || null,
-    publishedAt: data.publishedAt || null,
-  };
+return {
+  id,
+  title: data.title || 'Untitled Article',
+  slug: data.slug || id,
+
+  // Support both old and new Firestore field names
+  excerpt: data.excerpt || data.summary || '',
+
+  content:
+    data.content ||
+    data.content_md ||
+    data.body ||
+    '',
+
+  category: data.category || 'Physics',
+
+  tags: tags.length > 0 ? tags : ['JEE', 'NEET'],
+
+  published: Boolean(data.published),
+
+  author: data.author || 'VStudyHub',
+
+  readingTime: Number(data.readingTime || data.reading_minutes || 2),
+
+  createdAt: data.createdAt || null,
+  publishedAt: data.publishedAt || null,
+};
 }
 
 /**
