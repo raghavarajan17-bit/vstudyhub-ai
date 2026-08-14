@@ -1,4 +1,4 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+﻿import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
 
@@ -6,8 +6,19 @@ dotenv.config();
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // CORS Headers
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  const origin = req.headers.origin || '*';
+
+res.setHeader('Access-Control-Allow-Origin', origin);
+
+res.setHeader(
+  'Access-Control-Allow-Headers',
+  'Content-Type, Authorization'
+);
+
+res.setHeader(
+  'Access-Control-Allow-Methods',
+  'GET, POST, OPTIONS'
+);
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
   res.setHeader(
     'Access-Control-Allow-Headers',
