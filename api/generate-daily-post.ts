@@ -36,12 +36,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    const config = {
-      projectId: "gen-lang-client-0612192195",
-      firestoreDatabaseId: "ai-studio-vstudyhubjeeneet-550e4eae-7373-46d6-aff9-9555e855856e",
-      apiKey: "AIzaSyDltU8OiUXzh4lQyQ34fsvQn5H_1o-dujw"
-    };
-
+  const config = {
+  projectId: "gen-lang-client-0612192195",
+  firestoreDatabaseId: "ai-studio-vstudyhubjeeneet-550e4eae-7373-46d6-aff9-9555e855856e",
+  apiKey: process.env.FIREBASE_API_KEY || ""
+};
     try {
       const configPath = path.join(process.cwd(), 'firebase-applet-config.json');
       if (fs.existsSync(configPath)) {
