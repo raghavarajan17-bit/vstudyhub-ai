@@ -8,6 +8,7 @@ import { NoteDetailView } from './components/NoteDetailView';
 import { FormulaSheetView } from './components/FormulaSheetView';
 import { FlashcardView } from './components/FlashcardView';
 import { AiDoubtAssistant } from './components/AiDoubtAssistant';
+import { AiInterviewView } from './components/AiInterviewView';
 import { QuizEngine } from './components/QuizEngine';
 import { ProgressDashboard } from './components/ProgressDashboard';
 import { GamificationView } from './components/GamificationView';
@@ -288,6 +289,12 @@ export default function App() {
         {activeTab === 'ai-tutor' && (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <AiDoubtAssistant selectedExam={userProgress.selectedExam} />
+          </div>
+        )}
+        {/* AI Interview & English Coach Tab */}
+        {activeTab === 'ai-interview' && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <AiInterviewView />
           </div>
         )}
 
