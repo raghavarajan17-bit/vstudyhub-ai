@@ -63,6 +63,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // ------------------------------------------------------------------------
     const cronSecret = process.env.CRON_SECRET;
     const authHeader = req.headers.authorization;
+console.log("Authorization:", req.headers.authorization);
+console.log("x-vercel-cron:", req.headers["x-vercel-cron"]);
+console.log("User-Agent:", req.headers["user-agent"]);
+console.log("Authorization:", req.headers.authorization);
+console.log("x-vercel-cron:", req.headers["x-vercel-cron"]);
+console.log("User-Agent:", req.headers["user-agent"]);
     const querySecret = (req.query?.secret as string) || (req.query?.key as string);
     const isVercelCron =
       req.headers['x-vercel-cron'] === '1' ||

@@ -1,17 +1,45 @@
-import express from "express";
+﻿import express from "express";
 import path from "path";
 import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
 import { MOCK_CHAPTERS, MOCK_FORMULAS, MOCK_FLASHCARDS, MOCK_NOTES, MOCK_QUIZZES } from "./src/data/mockData";
-
+import Stripe from "stripe";
 dotenv.config();
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.json({ limit: "10mb" }));
+// Stripe Checkout - VStudyHub AI Coach
+app.post("/api/stripe/create-checkout-session", async (req, res) => {
+  try {
+    const session = await stripe.checkout.sessions.create({
+      mode: "subscription",
+      line_items: [
+        {
+          price: "price_1UAUMpRZcM9O6cVYggM2QEaO",
+          quantity: 1,
+        },
+      ],
+      success_url: `${process.env.APP_URL || "http://localhost:3000"}/?payment=success`,
+      cancel_url: `${process.env.APP_URL || "http://localhost:3000"}/?payment=cancelled`,
+    });
+
+    res.json({
+      success: true,
+      url: session.url,
+    });
+  } catch (error: any) {
+    console.error("Stripe Checkout Error:", error);
+    res.status(500).json({
+      success: false,
+      error: error?.message || "Unable to create checkout session.",
+    });
+  }
+});
 
 // Initialize Gemini Client (Server-Side Only)
 const ai = new GoogleGenAI({
@@ -22,6 +50,9 @@ const ai = new GoogleGenAI({
     },
   },
 });
+// Stripe Client (Server-Side Only)
+
+const STRIPE_PRICE_ID = "price_1UAUMpRZcM9O6cVYggM2QEaO";
 
 // API Routes
 app.get("/api/health", (_req, res) => {
