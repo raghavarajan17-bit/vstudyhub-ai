@@ -38,7 +38,10 @@ export default function App() {
   useEffect(() => {
     const handleUrlSync = () => {
       const path = window.location.pathname;
-      if (path === '/blog' || path.startsWith('/blog/')) {
+    if (path === '/ai-interview') {
+  setActiveTab('ai-interview');
+  setInitialBlogSlug(null);
+} else if (path === '/blog' || path.startsWith('/blog/')) {
         setActiveTab('blog');
         const parts = path.split('/blog/');
         if (parts[1]) {
