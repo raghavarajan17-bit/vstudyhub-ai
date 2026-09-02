@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
-    const baseUrl = "https://vstudyhub.com";
+   const baseUrl = "https://www.vstudyhub.com";
     const config = {
       projectId: "gen-lang-client-0612192195",
       firestoreDatabaseId: "ai-studio-vstudyhubjeeneet-550e4eae-7373-46d6-aff9-9555e855856e",
