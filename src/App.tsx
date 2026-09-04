@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { ExamBanner } from './components/ExamBanner';
@@ -8,7 +8,7 @@ import { NoteDetailView } from './components/NoteDetailView';
 import { FormulaSheetView } from './components/FormulaSheetView';
 import { FlashcardView } from './components/FlashcardView';
 import { AiDoubtAssistant } from './components/AiDoubtAssistant';
-import { AiInterviewView } from './components/AiInterviewView';
+import { AiCareerCoachView } from './components/AiCareerCoachView';
 import { QuizEngine } from './components/QuizEngine';
 import { ProgressDashboard } from './components/ProgressDashboard';
 import { GamificationView } from './components/GamificationView';
@@ -38,8 +38,8 @@ export default function App() {
   useEffect(() => {
     const handleUrlSync = () => {
       const path = window.location.pathname;
-    if (path === '/ai-interview') {
-  setActiveTab('ai-interview');
+ if (path === '/ai-career-coach' || path === '/ai-interview') {
+  setActiveTab('ai-career-coach');
   setInitialBlogSlug(null);
 } else if (path === '/blog' || path.startsWith('/blog/')) {
         setActiveTab('blog');
@@ -59,14 +59,17 @@ export default function App() {
 
   // Handler for tab selection with URL pushstate
   const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-    if (tab !== 'subjects') setActiveNoteId(null);
-    if (tab === 'blog') {
-      window.history.pushState({}, '', '/blog');
-    } else if (tab === 'home') {
-      window.history.pushState({}, '', '/');
-    }
-  };
+  setActiveTab(tab);
+  if (tab !== 'subjects') setActiveNoteId(null);
+
+  if (tab === 'ai-career-coach') {
+    window.history.pushState({}, '', '/ai-career-coach');
+  } else if (tab === 'blog') {
+    window.history.pushState({}, '', '/blog');
+  } else if (tab === 'home') {
+    window.history.pushState({}, '', '/');
+  }
+};
 
   // Initialize Firebase Auth listener
   useEffect(() => {
@@ -295,9 +298,9 @@ export default function App() {
           </div>
         )}
         {/* AI Interview & English Coach Tab */}
-        {activeTab === 'ai-interview' && (
+        {activeTab === 'ai-career-coach' && (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <AiInterviewView />
+            <AiCareerCoachView />
           </div>
         )}
 
@@ -374,4 +377,6 @@ export default function App() {
     </div>
   );
 }
+
+
 

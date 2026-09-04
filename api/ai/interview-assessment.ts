@@ -80,50 +80,42 @@ Return ONLY valid JSON using this exact structure:
 
 {
   "overallScore": 0,
-  "readinessLevel": "string",
-  "dimensionScores": {
-    "technicalAccuracy": 0,
-    "communicationClarity": 0,
-    "problemSolving": 0,
-    "englishFluency": 0,
-    "vocabularyGrammar": 0,
-    "structureSTAR": 0,
-    "confidenceTone": 0,
-    "roleAlignment": 0
+  "readinessLevel": "Needs More Practice",
+  "scores": {
+    "relevance": 0,
+    "structure": 0,
+    "clarity": 0,
+    "fluency": 0,
+    "grammar": 0,
+    "vocabulary": 0,
+    "professionalCommunication": 0,
+    "confidenceStyle": 0
   },
   "strongestArea": "string",
-  "biggestOpportunity": "string",
-  "top3Improvements": [
+  "strongestAreaExplanation": "string",
+  "biggestWeakness": "string",
+  "biggestWeaknessExplanation": "string",
+  "topImprovements": [
     {
       "title": "string",
-      "area": "string",
-      "issue": "string",
-      "recommendation": "string",
+      "description": "string",
       "example": "string",
       "priority": "High"
     }
   ],
-  "englishDiagnostics": {
-    "fluencyLevel": "string",
-    "frequentGrammarMistakes": ["string"],
-    "vocabularyEnhancements": [
-      {
-        "original": "string",
-        "suggested": "string",
-        "context": "string"
-      }
-    ]
+  "englishFeedback": {
+    "fluencyObservation": "string",
+    "grammarObservation": "string",
+    "vocabularyObservation": "string",
+    "clarityObservation": "string"
   },
-  "questionEvaluations": [
+  "questionFeedback": [
     {
       "questionNumber": 1,
-      "question": "string",
-      "userAnswer": "string",
       "score": 0,
-      "keyFeedback": "string",
+      "feedback": "string",
       "strengths": ["string"],
-      "improvements": ["string"],
-      "category": "general"
+      "improvements": ["string"]
     }
   ]
 }
@@ -133,12 +125,17 @@ Scoring rules:
 - OverallScore should reflect the candidate's actual interview readiness.
 - Do not inflate scores.
 - Consider the candidate's target role and experience level.
-- Assess technical accuracy only when technical content is relevant.
-- Assess communication, clarity, structure, confidence, and role alignment.
+- Assess relevance to the question.
+- Assess answer structure and organization.
+- Assess communication clarity.
+- Assess English fluency, grammar, and vocabulary.
+- Assess professional communication and confidence/style.
 - For behavioral answers, consider STAR structure.
-- For English interview tracks, give additional importance to fluency, vocabulary, grammar, and professional tone.
+- For technical answers, assess technical accuracy when relevant.
+- For English interview tracks, give additional importance to fluency, vocabulary, grammar, clarity, and professional tone.
 - Give specific actionable feedback.
 - Do not invent experience that the candidate did not mention.
+- Provide feedback for every interview question in the transcript.
 `;
 
     const ai = new GoogleGenAI({
@@ -175,32 +172,102 @@ Scoring rules:
       });
     }
 
+    // ---------------------------------------------------------
+    // Defensive normalization
+    // Ensures the frontend always receives the expected schema.
+    // ---------------------------------------------------------
+
     assessment.overallScore = Number(assessment.overallScore) || 0;
 
     assessment.readinessLevel =
       assessment.readinessLevel || "Needs More Practice";
 
-    assessment.dimensionScores =
-      assessment.dimensionScores || {};
+    assessment.scores = assessment.scores || {};
+
+    const scoreKeys = [
+      "relevance",
+      "structure",
+      "clarity",
+      "fluency",
+      "grammar",
+      "vocabulary",
+      "professionalCommunication",
+      "confidenceStyle",
+    ];
+
+    for (const key of scoreKeys) {
+      assessment.scores[key] = Number(assessment.scores[key]) || 0;
+
+      if (assessment.scores[key] < 0) {
+        assessment.scores[key] = 0;
+      }
+
+      if (assessment.scores[key] > 100) {
+        assessment.scores[key] = 100;
+      }
+    }
 
     assessment.strongestArea =
       assessment.strongestArea || "Communication";
 
-    assessment.biggestOpportunity =
-      assessment.biggestOpportunity ||
+    assessment.strongestAreaExplanation =
+      assessment.strongestAreaExplanation ||
+      "The candidate demonstrated useful communication strengths during the interview.";
+
+    assessment.biggestWeakness =
+      assessment.biggestWeakness ||
       "Answer structure and specificity";
 
-    assessment.top3Improvements = Array.isArray(
-      assessment.top3Improvements
+    assessment.biggestWeaknessExplanation =
+      assessment.biggestWeaknessExplanation ||
+      "Answers can be improved by using clearer structure and more specific examples.";
+
+    assessment.topImprovements = Array.isArray(
+      assessment.topImprovements
     )
-      ? assessment.top3Improvements
+      ? assessment.topImprovements
       : [];
 
-    assessment.questionEvaluations = Array.isArray(
-      assessment.questionEvaluations
+    assessment.englishFeedback =
+      assessment.englishFeedback || {};
+
+    assessment.englishFeedback.fluencyObservation =
+      assessment.englishFeedback.fluencyObservation ||
+      "Continue practicing clear and natural spoken responses.";
+
+    assessment.englishFeedback.grammarObservation =
+      assessment.englishFeedback.grammarObservation ||
+      "Review recurring grammar patterns and sentence construction.";
+
+    assessment.englishFeedback.vocabularyObservation =
+      assessment.englishFeedback.vocabularyObservation ||
+      "Use precise, professional vocabulary relevant to the target role.";
+
+    assessment.englishFeedback.clarityObservation =
+      assessment.englishFeedback.clarityObservation ||
+      "Organize answers into clear points with concise explanations.";
+
+    assessment.questionFeedback = Array.isArray(
+      assessment.questionFeedback
     )
-      ? assessment.questionEvaluations
+      ? assessment.questionFeedback
       : [];
+
+    // ---------------------------------------------------------
+    // Keep backward-compatible fields for existing code.
+    // ---------------------------------------------------------
+
+    assessment.dimensionScores =
+      assessment.dimensionScores || {};
+
+    assessment.top3Improvements =
+      assessment.top3Improvements || assessment.topImprovements;
+
+    assessment.questionEvaluations =
+      assessment.questionEvaluations || assessment.questionFeedback;
+
+    assessment.englishDiagnostics =
+      assessment.englishDiagnostics || {};
 
     return res.status(200).json(assessment);
   } catch (error: any) {

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+﻿import React, { useState, useRef, useEffect } from 'react';
 import {
   Sparkles,
   MessageSquareText,
@@ -481,11 +481,12 @@ export const AiInterviewView: React.FC = () => {
                 Exit
               </button>
 
-              <button
-                onClick={submitAnswer}
-                disabled={isLoading || !userAnswer.trim()}
-                className="w-full sm:w-auto px-8 py-3 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold text-sm shadow-md shadow-indigo-500/20 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.01] transition-all flex items-center justify-center gap-2 cursor-pointer"
-              >
+ <button
+  type="button"
+  onClick={submitAnswer}
+  disabled={isLoading || !userAnswer.trim()}
+  className="min-w-[180px] px-8 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 cursor-pointer"
+>
                 {isLoading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -756,7 +757,9 @@ export const AiInterviewView: React.FC = () => {
 
                         <div className="flex items-center justify-between text-[10px] text-slate-400">
                           <span>{dim.desc}</span>
-                          <span className="font-mono">Weight: {dim.weight}</span>
+                         <span className="font-mono text-indigo-600 dark:text-indigo-400">
+  {wordCount} {wordCount === 1 ? 'word' : 'words'}
+</span>
                         </div>
                       </div>
                     ))}
