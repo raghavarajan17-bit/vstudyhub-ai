@@ -1,4 +1,4 @@
-import { CareerAnalysis, ResumeImprovement, ActionPlanItem } from '../types/careerCoach.types';
+import { CareerAnalysis, ResumeImprovement, ActionPlanItem } from '../types/careerCoach.types.js';
 
 /**
  * Clamps numeric value safely between min and max (default 0 to 100).

@@ -1,8 +1,8 @@
 import { GoogleGenAI, Type } from '@google/genai';
-import { CareerAnalysis, CareerAnalysisRequest } from '../../src/types/careerCoach.types';
-import { normalizeCareerAnalysis } from '../../src/utils/careerCoachNormalization';
-import { classifyGeminiError, formatAiLog } from '../../src/utils/aiErrorClassification';
-import { AiErrorDetail } from '../../src/types/aiError.types';
+import { CareerAnalysis, CareerAnalysisRequest } from '../../src/types/careerCoach.types.js';
+import { normalizeCareerAnalysis } from '../../src/utils/careerCoachNormalization.js';
+import { classifyGeminiError, formatAiLog } from '../../src/utils/aiErrorClassification.js';
+import { AiErrorDetail } from '../../src/types/aiError.types.js';
 
 export interface CareerCoachServiceResult {
   success: boolean;

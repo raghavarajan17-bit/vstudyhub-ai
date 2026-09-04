@@ -1,4 +1,4 @@
-import type { AiErrorCode, AiErrorDetail } from '../types/aiError.types';
+import type { AiErrorCode, AiErrorDetail } from '../types/aiError.types.js';
 
 /**
  * Standard safe user-facing error messages.
