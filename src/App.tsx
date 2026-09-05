@@ -66,7 +66,9 @@ export default function App() {
   setActiveTab(tab);
   if (tab !== 'subjects') setActiveNoteId(null);
 
-  if (tab === 'ai-career-coach') {
+  if (tab === 'ai-interview') {
+    window.history.pushState({}, '', '/ai-interview');
+  } else if (tab === 'ai-career-coach') {
     window.history.pushState({}, '', '/ai-career-coach');
   } else if (tab === 'blog') {
     window.history.pushState({}, '', '/blog');

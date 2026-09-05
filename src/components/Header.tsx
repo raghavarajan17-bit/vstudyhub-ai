@@ -44,6 +44,7 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'blog', label: 'Blog', icon: Newspaper },
     { id: 'ai-tutor', label: 'AI Tutor', icon: Sparkles, badge: 'AI' },
 { id: 'ai-career-coach', label: 'AI Career Coach', icon: Target, badge: 'GLOBAL' },
+    { id: 'ai-interview', label: 'AI Interview', icon: MessageSquareText, badge: 'AI' },
     { id: 'gamification', label: 'Leaderboard', icon: Award },
     { id: 'quizzes', label: 'Quizzes', icon: HelpCircle },
   ];
