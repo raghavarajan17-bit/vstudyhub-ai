@@ -9,6 +9,7 @@ import { FormulaSheetView } from './components/FormulaSheetView';
 import { FlashcardView } from './components/FlashcardView';
 import { AiDoubtAssistant } from './components/AiDoubtAssistant';
 import { AiCareerCoachView } from './components/AiCareerCoachView';
+import { AiInterviewView } from './components/AiInterviewView';
 import { QuizEngine } from './components/QuizEngine';
 import { ProgressDashboard } from './components/ProgressDashboard';
 import { GamificationView } from './components/GamificationView';
@@ -38,10 +39,13 @@ export default function App() {
   useEffect(() => {
     const handleUrlSync = () => {
       const path = window.location.pathname;
- if (path === '/ai-career-coach' || path === '/ai-interview') {
-  setActiveTab('ai-career-coach');
-  setInitialBlogSlug(null);
-} else if (path === '/blog' || path.startsWith('/blog/')) {
+      if (path === '/ai-career-coach') {
+        setActiveTab('ai-career-coach');
+        setInitialBlogSlug(null);
+      } else if (path === '/ai-interview') {
+        setActiveTab('ai-interview');
+        setInitialBlogSlug(null);
+      } else if (path === '/blog' || path.startsWith('/blog/')) {
         setActiveTab('blog');
         const parts = path.split('/blog/');
         if (parts[1]) {
@@ -301,6 +305,12 @@ export default function App() {
         {activeTab === 'ai-career-coach' && (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <AiCareerCoachView />
+          </div>
+        )}
+        {/* AI Interview Practice Tab */}
+        {activeTab === 'ai-interview' && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <AiInterviewView />
           </div>
         )}
 
