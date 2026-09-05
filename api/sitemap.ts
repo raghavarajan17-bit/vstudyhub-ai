@@ -55,6 +55,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       { url: `${baseUrl}/`, priority: '1.0', changefreq: 'daily' },
       { url: `${baseUrl}/blog`, priority: '0.9', changefreq: 'daily' },
       { url: `${baseUrl}/subjects`, priority: '0.8', changefreq: 'weekly' },
+      { url: `${baseUrl}/ai-career-coach`, priority: '0.9', changefreq: 'weekly' },
+      { url: `${baseUrl}/resources`, priority: '0.8', changefreq: 'weekly' },
       { url: `${baseUrl}/blog/subject/physics`, priority: '0.8', changefreq: 'weekly' },
       { url: `${baseUrl}/blog/subject/chemistry`, priority: '0.8', changefreq: 'weekly' },
       { url: `${baseUrl}/blog/subject/mathematics`, priority: '0.8', changefreq: 'weekly' },
