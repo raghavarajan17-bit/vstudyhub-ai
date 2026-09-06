@@ -1,5 +1,4 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import firebaseConfig from '../firebase-applet-config.json';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
@@ -7,7 +6,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const config = {
       projectId: process.env.FIREBASE_PROJECT_ID || 'gen-lang-client-0612192195',
       firestoreDatabaseId: process.env.FIREBASE_DATABASE_ID || 'ai-studio-vstudyhubjeeneet-550e4eae-7373-46d6-aff9-9555e855856e',
-     apiKey: process.env.FIREBASE_API_KEY || process.env.VITE_FIREBASE_API_KEY || firebaseConfig.apiKey
+   apiKey: process.env.FIREBASE_API_KEY || process.env.VITE_FIREBASE_API_KEY
     };
     const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${config.projectId}/databases/${config.firestoreDatabaseId}/documents:runQuery?key=${config.apiKey}`;
 
