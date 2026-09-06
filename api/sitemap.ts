@@ -1,14 +1,14 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import firebaseConfig from '../firebase-applet-config.json';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
    const baseUrl = "https://www.vstudyhub.com";
     const config = {
-      projectId: "gen-lang-client-0612192195",
-      firestoreDatabaseId: "ai-studio-vstudyhubjeeneet-550e4eae-7373-46d6-aff9-9555e855856e",
-      apiKey: "AIzaSyDltU8OiUXzh4lQyQ34fsvQn5H_1o-dujw"
+      projectId: process.env.FIREBASE_PROJECT_ID || 'gen-lang-client-0612192195',
+      firestoreDatabaseId: process.env.FIREBASE_DATABASE_ID || 'ai-studio-vstudyhubjeeneet-550e4eae-7373-46d6-aff9-9555e855856e',
+     apiKey: process.env.FIREBASE_API_KEY || process.env.VITE_FIREBASE_API_KEY || firebaseConfig.apiKey
     };
-
     const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${config.projectId}/databases/${config.firestoreDatabaseId}/documents:runQuery?key=${config.apiKey}`;
 
     let blogEntries: Array<{ url: string; lastmod?: string; priority: string; changefreq: string }> = [];
@@ -52,18 +52,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const staticEntries = [
-      { url: `${baseUrl}/`, priority: '1.0', changefreq: 'daily' },
-      { url: `${baseUrl}/blog`, priority: '0.9', changefreq: 'daily' },
-      { url: `${baseUrl}/subjects`, priority: '0.8', changefreq: 'weekly' },
-      { url: `${baseUrl}/ai-career-coach`, priority: '0.9', changefreq: 'weekly' },
-      { url: `${baseUrl}/resources`, priority: '0.8', changefreq: 'weekly' },
-      { url: `${baseUrl}/blog/subject/physics`, priority: '0.8', changefreq: 'weekly' },
-      { url: `${baseUrl}/blog/subject/chemistry`, priority: '0.8', changefreq: 'weekly' },
-      { url: `${baseUrl}/blog/subject/mathematics`, priority: '0.8', changefreq: 'weekly' },
-      { url: `${baseUrl}/blog/subject/biology`, priority: '0.8', changefreq: 'weekly' },
-      { url: `${baseUrl}/formulas`, priority: '0.8', changefreq: 'weekly' },
-      { url: `${baseUrl}/quizzes`, priority: '0.7', changefreq: 'weekly' },
-    ];
+  { url: `${baseUrl}/`, priority: '1.0', changefreq: 'daily' },
+  { url: `${baseUrl}/blog`, priority: '0.9', changefreq: 'daily' },
+  { url: `${baseUrl}/ai-career-coach`, priority: '0.9', changefreq: 'weekly' },
+  { url: `${baseUrl}/ai-interview`, priority: '0.9', changefreq: 'weekly' },
+];
 
     const map = new Map();
     for (const entry of [...staticEntries, ...blogEntries]) {
@@ -91,3 +84,5 @@ ${allEntries.map((item) => `  <url>
     res.status(500).send("Error generating sitemap");
   }
 }
+
+
