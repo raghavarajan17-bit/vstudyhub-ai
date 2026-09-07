@@ -4,8 +4,8 @@ import { SITE } from '../lib/site-config';
 
 export function BlogIndexRoute() {
   const canonicalUrl = `${SITE.url}/blog`;
-  const title = "VStudyHub Blog - JEE & NEET Preparation Tips, Strategies & Concepts";
-  const description = "Explore expert JEE & NEET preparation tips, chapter breakdowns, formulas, and strategies on VStudyHub.";
+  const title = "VStudyHub Blog | Career, Interview & English Tips";
+  const description = "Explore practical career, interview, professional English, and AI coaching tips for global learners and job seekers.";
 
   const jsonLd = {
     '@context': 'https://schema.org',

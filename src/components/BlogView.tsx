@@ -1,6 +1,6 @@
-﻿import React, { useState, useEffect } from 'react';
-import { 
-  BookOpen, Search, Clock, Calendar, User, Tag, ArrowLeft, 
+import React, { useState, useEffect } from 'react';
+import {
+  BookOpen, Search, Clock, Calendar, User, Tag, ArrowLeft,
   Share2, Check, Sparkles, RefreshCw, AlertCircle, ChevronRight, Filter,
   MessageSquare, FileText, ArrowRight
 } from 'lucide-react';
@@ -17,7 +17,7 @@ export const BlogView: React.FC<BlogViewProps> = ({ initialSlug, onOpenAiWithCon
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activePost, setActivePost] = useState<BlogPost | null>(null);
@@ -77,12 +77,12 @@ export const BlogView: React.FC<BlogViewProps> = ({ initialSlug, onOpenAiWithCon
     if (typeof document === 'undefined') return;
 
     const baseUrl = SITE.url;
-    let titleText = 'VStudyHub Blog - JEE & NEET Preparation Tips, Strategies & Concepts';
-    let descriptionText = 'Explore expert JEE & NEET preparation tips, chapter breakdowns, formulas, and strategies on VStudyHub.';
+    let titleText = 'VStudyHub Blog | Career, Interview & English Tips';
+    let descriptionText = 'Explore practical career, interview, professional English, and AI coaching tips for global learners and job seekers.';
     let canonicalUrl = `${baseUrl}/blog`;
 
     if (activePost) {
-      titleText = `${activePost.title} | VStudyHub JEE & NEET Prep`;
+      titleText = `${activePost.title} | VStudyHub Global Career Prep`;
       descriptionText = activePost.excerpt || activePost.content.substring(0, 160);
       canonicalUrl = `${baseUrl}/blog/${activePost.slug || activePost.id}`;
     }
@@ -264,26 +264,26 @@ export const BlogView: React.FC<BlogViewProps> = ({ initialSlug, onOpenAiWithCon
     if (selectedCategory === 'All') {
       matchesCategory = true;
     } else if (selectedCategory === 'JEE') {
-      matchesCategory = 
-        post.category === 'JEE' || 
+      matchesCategory =
+        post.category === 'JEE' ||
         post.tags.some(t => t.toLowerCase().includes('jee')) ||
         post.title.toLowerCase().includes('jee') ||
         post.excerpt.toLowerCase().includes('jee');
     } else if (selectedCategory === 'NEET') {
-      matchesCategory = 
-        post.category === 'NEET' || 
+      matchesCategory =
+        post.category === 'NEET' ||
         post.tags.some(t => t.toLowerCase().includes('neet')) ||
         post.title.toLowerCase().includes('neet') ||
         post.excerpt.toLowerCase().includes('neet');
     } else {
-      matchesCategory = 
+      matchesCategory =
         post.category === selectedCategory ||
         post.tags.some(t => t.toLowerCase() === selectedCategory.toLowerCase()) ||
         post.title.toLowerCase().includes(selectedCategory.toLowerCase());
     }
 
     const queryLower = searchQuery.toLowerCase().trim();
-    const matchesSearch = !queryLower || 
+    const matchesSearch = !queryLower ||
       post.title.toLowerCase().includes(queryLower) ||
       post.excerpt.toLowerCase().includes(queryLower) ||
       post.content.toLowerCase().includes(queryLower) ||
@@ -528,7 +528,7 @@ const renderFormattedContent = (content?: string | null) => {
   if (activePost) {
     return (
       <div className="py-8 max-w-4xl mx-auto space-y-8 animate-fadeIn">
-        
+
         {/* Navigation back */}
         <button
           onClick={handleBackToListing}
@@ -578,7 +578,7 @@ const renderFormattedContent = (content?: string | null) => {
                 {activePost.author || 'VStudyHub Expert Faculty'}
               </p>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                JEE & NEET Exam Mentor • VStudyHub Academic Content
+                JEE & NEET Exam Mentor � VStudyHub Academic Content
               </p>
             </div>
           </div>
@@ -678,7 +678,7 @@ const renderFormattedContent = (content?: string | null) => {
   // RENDER: Main Blog Listing View
   return (
     <div className="py-8 space-y-8 max-w-7xl mx-auto">
-      
+
       {/* Top Banner Header */}
       <div className="relative rounded-3xl bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-950 text-white p-8 sm:p-12 overflow-hidden shadow-xl">
         <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl pointer-events-none" />
@@ -691,14 +691,14 @@ const renderFormattedContent = (content?: string | null) => {
             VStudyHub Blog
           </h1>
           <p className="text-slate-200 text-sm sm:text-base leading-relaxed font-medium">
-            JEE & NEET preparation tips, concepts, strategies, formulas, and exam updates
+            Career, interview, professional English, and AI coaching tips for global careers
           </p>
         </div>
       </div>
 
       {/* Controls Bar: Search & Category Filters */}
       <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-        
+
         {/* Category Filters: All | Physics | Chemistry | Mathematics | Biology | JEE | NEET */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-2 md:pb-0 scrollbar-none">
           {categories.map((cat) => (
@@ -769,8 +769,8 @@ const renderFormattedContent = (content?: string | null) => {
             No Published Articles Found
           </h3>
           <p className="text-xs text-slate-500 max-w-md mx-auto">
-            {searchQuery || selectedCategory !== 'All' 
-              ? 'No articles match your current search query or category filter.' 
+            {searchQuery || selectedCategory !== 'All'
+              ? 'No articles match your current search query or category filter.'
               : 'Blog articles published in Cloud Firestore (collection "blogPosts" with published: true) will appear here.'}
           </p>
           {(searchQuery || selectedCategory !== 'All') && (
@@ -818,7 +818,7 @@ const renderFormattedContent = (content?: string | null) => {
                     {post.author || 'VStudyHub'}
                   </span>
                 </div>
-                
+
                 <span className="text-blue-600 dark:text-blue-400 font-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
                   Read More <ChevronRight className="w-3.5 h-3.5" />
                 </span>

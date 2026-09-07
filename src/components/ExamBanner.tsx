@@ -24,18 +24,18 @@ export const ExamBanner: React.FC<ExamBannerProps> = ({
 
   return (
     <div className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-900 text-white pt-8 pb-12 px-4 sm:px-6 lg:px-8 border-b border-indigo-900/50">
-      
+
       {/* Subtle Background Glows */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full filter blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full filter blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        
+
         {/* Top Announcement pill */}
         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs font-medium text-indigo-200">
             <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-spin-slow" />
-            <span>Updated for 2026 JEE Main / NEET Syllabus</span>
+            <span>AI-Powered Career & Interview Coaching for Global Careers</span>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
           </div>
 
@@ -71,18 +71,18 @@ export const ExamBanner: React.FC<ExamBannerProps> = ({
 
         {/* Main Hero Header */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          
+
           <div className="lg:col-span-7 space-y-5">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
-              Master <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-indigo-300">Physics, Chemistry, Math & Bio</span> for Top AIR Ranks
+              Build Career Confidence with <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-indigo-300">AI Interview & English Coaching</span>
             </h1>
-            
+
             <p className="text-sm sm:text-base text-slate-300 max-w-2xl leading-relaxed">
-              NCERT-aligned notes, 3,500+ formulas with KaTeX step breakdowns, spaced-repetition flashcards, and instant step-by-step AI doubt solutions.
+              Practice job interviews, improve professional English, and receive personalized AI feedback to communicate with confidence in global careers.
             </p>
 
             {/* Quick Search Input */}
-            <div 
+            <div
               onClick={onOpenSearch}
               className="flex items-center gap-3 p-3 bg-white/10 hover:bg-white/15 backdrop-blur-lg border border-white/20 rounded-xl cursor-pointer transition-all shadow-xl group max-w-xl"
             >
@@ -103,8 +103,8 @@ export const ExamBanner: React.FC<ExamBannerProps> = ({
 
           {/* Right Action Cards */}
           <div className="lg:col-span-5 grid grid-cols-2 gap-3.5">
-            
-            <div 
+
+            <div
               onClick={() => onTabChange('ai-tutor')}
               className="p-4 rounded-xl bg-gradient-to-br from-indigo-900/80 to-purple-900/80 border border-indigo-500/30 hover:border-indigo-400 cursor-pointer transition-all hover:-translate-y-1 group shadow-lg"
             >
@@ -119,7 +119,7 @@ export const ExamBanner: React.FC<ExamBannerProps> = ({
               </p>
             </div>
 
-            <div 
+            <div
               onClick={() => onTabChange('formulas')}
               className="p-4 rounded-xl bg-gradient-to-br from-blue-900/80 to-cyan-900/80 border border-blue-500/30 hover:border-blue-400 cursor-pointer transition-all hover:-translate-y-1 group shadow-lg"
             >
@@ -134,7 +134,7 @@ export const ExamBanner: React.FC<ExamBannerProps> = ({
               </p>
             </div>
 
-            <div 
+            <div
               onClick={() => onTabChange('flashcards')}
               className="p-4 rounded-xl bg-gradient-to-br from-purple-900/80 to-pink-900/80 border border-purple-500/30 hover:border-purple-400 cursor-pointer transition-all hover:-translate-y-1 group shadow-lg"
             >
@@ -149,7 +149,7 @@ export const ExamBanner: React.FC<ExamBannerProps> = ({
               </p>
             </div>
 
-            <div 
+            <div
               onClick={() => onTabChange('quizzes')}
               className="p-4 rounded-xl bg-gradient-to-br from-emerald-900/80 to-teal-900/80 border border-emerald-500/30 hover:border-emerald-400 cursor-pointer transition-all hover:-translate-y-1 group shadow-lg"
             >

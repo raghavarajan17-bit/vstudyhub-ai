@@ -19,9 +19,9 @@ export function BlogSlugRoute({ slug }: BlogSlugRouteProps) {
 
   const postSlug = slug || post?.slug || post?.id || '';
   const canonicalUrl = `${SITE.url}/blog/${postSlug}`;
-  const title = post ? `${post.title} | VStudyHub JEE & NEET Prep` : 'VStudyHub Blog Article';
+  const title = post ? `${post.title} | VStudyHub Global Career Prep` : 'VStudyHub Blog Article';
   const description = post?.excerpt || post?.content.substring(0, 160) || SITE.description;
-  
+
   const formatDateIso = (val: any) => {
     if (!val) return new Date().toISOString();
     try {

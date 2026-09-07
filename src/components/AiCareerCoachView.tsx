@@ -397,11 +397,11 @@ ${(analysisResult.actionPlan || []).map((step) => `• Day ${step.day}: ${step.a
         </div>
 
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-          AI Career Coach
+          AI Career Coach for Global Careers
         </h1>
 
         <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
-          Understand your strengths, find skill gaps, and become more job-ready.
+          Build job-ready skills, identify career gaps, and improve your interview readiness with personalized AI coaching.
         </p>
 
         {/* Feature Pills */}
@@ -1112,7 +1112,7 @@ Tip: You can simply copy all text from your PDF or Word document and paste it di
                   Accelerate Your Hiring Pipeline with Career Pro
                 </h3>
                 <p className="text-xs sm:text-sm text-indigo-200/90 leading-relaxed">
-                  We are expanding AI Career Coach with personalized career toolchains to help you secure interviews faster.
+                  We are expanding AI Career Coach for Global Careers with personalized career toolchains to help you secure interviews faster.
                 </p>
               </div>
 

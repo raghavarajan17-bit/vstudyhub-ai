@@ -11,7 +11,7 @@ export const Footer: React.FC<FooterProps> = ({ onTabChange, onExamChange }) => 
     <footer className="bg-slate-900 text-slate-400 border-t border-slate-800 pt-12 pb-8 mt-16 text-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-10 border-b border-slate-800">
-          
+
           {/* Brand Col */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-2.5">
@@ -42,7 +42,7 @@ export const Footer: React.FC<FooterProps> = ({ onTabChange, onExamChange }) => 
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <button 
+                <button
                   onClick={() => { onExamChange('JEE'); onTabChange('subjects'); }}
                   className="hover:text-blue-400 transition-colors"
                 >
@@ -50,7 +50,7 @@ export const Footer: React.FC<FooterProps> = ({ onTabChange, onExamChange }) => 
                 </button>
               </li>
               <li>
-                <button 
+                <button
                   onClick={() => { onExamChange('JEE'); onTabChange('subjects'); }}
                   className="hover:text-blue-400 transition-colors"
                 >
@@ -58,7 +58,7 @@ export const Footer: React.FC<FooterProps> = ({ onTabChange, onExamChange }) => 
                 </button>
               </li>
               <li>
-                <button 
+                <button
                   onClick={() => { onExamChange('NEET'); onTabChange('subjects'); }}
                   className="hover:text-emerald-400 transition-colors"
                 >
@@ -66,7 +66,7 @@ export const Footer: React.FC<FooterProps> = ({ onTabChange, onExamChange }) => 
                 </button>
               </li>
               <li>
-                <button 
+                <button
                   onClick={() => { onExamChange('ALL'); onTabChange('formulas'); }}
                   className="hover:text-purple-400 transition-colors"
                 >
@@ -127,7 +127,7 @@ export const Footer: React.FC<FooterProps> = ({ onTabChange, onExamChange }) => 
 
         {/* Bottom Bar */}
         <div className="pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-          <p>© 2026 VStudyHub. Empowering thousands of engineering & medical aspirants daily.</p>
+          <p>© 2026 VStudyHub. Helping learners and professionals build career and communication confidence with AI.</p>
           <div className="flex items-center gap-6">
             <span>Terms of Service</span>
             <span>Privacy Policy</span>

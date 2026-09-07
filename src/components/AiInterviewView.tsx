@@ -1116,7 +1116,7 @@ export const AiInterviewView: React.FC = () => {
 
           {/* Headline */}
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight sm:leading-tight">
-            Practice Your Interview.{' '}
+            AI Interview & English Coach for Global Careers{' '}
             <span className="bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-400 bg-clip-text text-transparent">
               Improve Your English.
             </span>{' '}
