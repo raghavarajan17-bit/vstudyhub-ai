@@ -76,7 +76,7 @@ export const Header: React.FC<HeaderProps> = ({
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                JEE & NEET Exam Platform
+                AI Interview & English Coach for Global Careers
               </p>
             </div>
           </div>
