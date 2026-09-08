@@ -3,47 +3,32 @@ import { GoogleGenAI } from '@google/genai';
 import fs from 'fs';
 import path from 'path';
 
-// Core curriculum topics covering JEE (Main & Advanced) and NEET syllabi
+// Global career, interview, and professional English content architecture
 const CURRICULUM_TOPICS = [
-  // Physics
-  { subject: 'Physics', topic: 'Rotational Dynamics & Moment of Inertia: Theorems and Rolling Motion' },
-  { subject: 'Physics', topic: 'Ray Optics: Total Internal Reflection, Prism Dispersion, and Optical Instruments' },
-  { subject: 'Physics', topic: 'Thermodynamics & Heat Engines: Carnot Cycle and First/Second Laws' },
-  { subject: 'Physics', topic: 'Current Electricity: Kirchhoff Laws, Wheatstone Bridge, and Potentiometer' },
-  { subject: 'Physics', topic: 'Modern Physics: Photoelectric Effect, De Broglie Wavelength, and Bohr Atom' },
-  { subject: 'Physics', topic: 'Electrostatics: Gauss Law Applications and Capacitance with Dielectrics' },
-  { subject: 'Physics', topic: 'Electromagnetic Induction & AC: Lenz Law, Self/Mutual Inductance, and LCR Resonance' },
-  { subject: 'Physics', topic: 'Simple Harmonic Motion & Waves: Damped Oscillations, Resonance, and Doppler Effect' },
-  { subject: 'Physics', topic: 'Fluid Mechanics: Bernoulli Theorem, Viscosity, and Surface Tension Applications' },
-  
-  // Chemistry
-  { subject: 'Chemistry', topic: 'Organic Reaction Mechanisms: Electrophilic Addition to Alkenes and Alkynes' },
-  { subject: 'Chemistry', topic: 'Aldehydes, Ketones & Carboxylic Acids: Aldol, Cannizzaro, and Nucleophilic Additions' },
-  { subject: 'Chemistry', topic: 'Chemical & Ionic Equilibrium: Le Chatelier Principle, pH, and Buffer Solutions' },
-  { subject: 'Chemistry', topic: 'Chemical Kinetics: Rate Laws, Arrhenius Equation, and Activation Energy' },
-  { subject: 'Chemistry', topic: 'Coordination Compounds: Crystal Field Theory (CFT) and Isomerism' },
-  { subject: 'Chemistry', topic: 'Electrochemistry: Nernst Equation, Kohlrausch Law, and Fuel Cells' },
-  { subject: 'Chemistry', topic: 'Thermodynamics & Thermochemistry: Gibbs Free Energy, Spontaneity, and Hess Law' },
-  { subject: 'Chemistry', topic: 'p-Block & d-Block Elements: High-Yield Trends, Anomalous Behaviors, and NCERT Reactions' },
-  { subject: 'Chemistry', topic: 'Solutions & Colligative Properties: Raoult Law, Van t Hoff Factor, and Osmotic Pressure' },
-  
-  // Mathematics (JEE Focus)
-  { subject: 'Mathematics', topic: 'Definite Integrals: Properties, King Rule, and Area Under Curves' },
-  { subject: 'Mathematics', topic: 'Differential Equations: Variable Separable, Homogeneous, and Linear DE Formats' },
-  { subject: 'Mathematics', topic: 'Vectors & 3D Geometry: Dot/Cross Products, Shortest Distance, and Plane Equations' },
-  { subject: 'Mathematics', topic: 'Matrices & Determinants: System of Linear Equations, Adjoint, and Inverse' },
-  { subject: 'Mathematics', topic: 'Complex Numbers: De Moivre Theorem, Geometry of Complex Numbers, and Roots of Unity' },
-  { subject: 'Mathematics', topic: 'Application of Derivatives: Tangents, Normals, and Maxima/Minima Optimization' },
-  { subject: 'Mathematics', topic: 'Coordinate Geometry: Conic Sections (Parabola, Ellipse, Hyperbola) Standard Tangents' },
-  { subject: 'Mathematics', topic: 'Probability & Binomial Theorem: Conditional Probability, Bayes Theorem, and General Terms' },
-  
-  // Biology (NEET Focus)
-  { subject: 'Biology', topic: 'Molecular Basis of Inheritance: DNA Replication, Transcription, and Genetic Code' },
-  { subject: 'Biology', topic: 'Human Physiology: Endocrine System, Hormonal Feedback, and Chemical Coordination' },
-  { subject: 'Biology', topic: 'Plant Physiology: Photosynthesis in Higher Plants (C3, C4, CAM Pathways)' },
-  { subject: 'Biology', topic: 'Cell Cycle & Cell Division: Detailed Stages of Mitosis and Meiosis Comparison' },
-  { subject: 'Biology', topic: 'Biotechnology: Recombinant DNA Technology, PCR, and Transgenic Applications' },
-  { subject: 'Biology', topic: 'Ecology & Biodiversity: Ecosystem Dynamics, Nutrient Cycles, and Conservation Strategies' }
+  { subject: 'Career', topic: 'AI Interview Practice: How to Prepare for a Job Interview with AI Feedback' },
+  { subject: 'Career', topic: 'Common Job Interview Questions and How to Answer Them with the STAR Method' },
+  { subject: 'Career', topic: 'Behavioral Interview Preparation: Tell Me About Yourself, Strengths, Weaknesses, and More' },
+  { subject: 'Career', topic: 'Technical Interview Preparation: A Practical Framework for Explaining Your Skills and Projects' },
+  { subject: 'Career', topic: 'Mock Interview Practice: How to Simulate a Real Interview and Improve Your Answers' },
+  { subject: 'Career', topic: 'Interview Communication Skills: How to Answer Clearly, Concisely, and Confidently' },
+  { subject: 'Career', topic: 'AI Career Coach: How AI Can Help You Plan Your Career and Identify Skill Gaps' },
+  { subject: 'Career', topic: 'How to Prepare for Your First International Job Interview' },
+  { subject: 'Career', topic: 'Resume to Interview: How to Turn Your Experience into Strong Interview Answers' },
+  { subject: 'Career', topic: 'Career Change Interview Preparation: How to Explain Your Transition with Confidence' },
+  { subject: 'Career', topic: 'Job Interview Preparation Checklist: What to Do Before, During, and After an Interview' },
+  { subject: 'Career', topic: 'How to Research a Company Before a Job Interview' },
+  { subject: 'Career', topic: 'English for Job Interviews: Essential Phrases and Professional Answers' },
+  { subject: 'Career', topic: 'How to Speak More Confidently in English During a Job Interview' },
+  { subject: 'Career', topic: 'Professional English Communication Skills for Global Careers' },
+  { subject: 'Career', topic: 'Common English Mistakes to Avoid in Job Interviews' },
+  { subject: 'Career', topic: 'How to Explain Your Work Experience Clearly in English' },
+  { subject: 'Career', topic: 'English Interview Practice: Questions, Answers, and Confidence-Building Techniques' },
+  { subject: 'Career', topic: 'International Job Interview Tips for Candidates Applying Globally' },
+  { subject: 'Career', topic: 'Remote Job Interview Preparation: How to Succeed in a Video Interview' },
+  { subject: 'Career', topic: 'How to Prepare for a Multicultural Job Interview' },
+  { subject: 'Career', topic: 'AI-Powered Interview Preparation for Students and Early-Career Professionals' },
+  { subject: 'Career', topic: 'How to Build Interview Confidence Before Applying for Global Jobs' },
+  { subject: 'Career', topic: 'Interview Skills Every International Job Seeker Should Develop' },
 ];
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -197,7 +182,7 @@ console.log("User-Agent:", req.headers["user-agent"]);
 
     // Allow manual override if passed in body or query
     const requestedTopic = (req.body?.topic || req.query?.topic) as string | undefined;
-    const finalTopic = requestedTopic || `${chosenTopicObj.topic} (Daily Revision for JEE & NEET)`;
+    const finalTopic = requestedTopic || chosenTopicObj.topic;
     const defaultCategory = chosenTopicObj.subject;
 
     log(`Selected Topic: "${finalTopic}" [Category: ${defaultCategory}]`);
@@ -221,42 +206,56 @@ console.log("User-Agent:", req.headers["user-agent"]);
       httpOptions: { headers: { 'User-Agent': 'aistudio-build' } }
     });
 
-    const prompt = `You are a legendary Senior Academic Master Faculty and Chief Curriculum Mentor for India's premier entrance exams: JEE Main, JEE Advanced, and NEET.
+    const prompt = `You are a world-class career coach, interview expert, professional English communication coach, and SEO content strategist for an international audience.
 
-Write a complete, highly comprehensive, rigorous, and authentic educational article (EXACTLY 1,200 to 1,800 words) on the topic:
+Write a complete, highly useful, original, practical, and trustworthy educational article (EXACTLY 1,200 to 1,800 words) on the topic:
 "${finalTopic}"
 
-TARGET AUDIENCE: Serious aspirants aiming for Top 500 AIR in JEE 2026/2027 and 700+ in NEET 2026/2027.
+TARGET AUDIENCE: International students, graduates, job seekers, career changers, and working professionals preparing for interviews or improving professional English for global careers.
 
-MANDATORY STRUCTURE & REQUIREMENTS:
-1. TITLE: Catchy, authoritative, high-ranking SEO title with the subject and exam tags.
-2. EXCERPT: 2-3 sentence engaging summary highlighting key concepts and why this chapter holds high weightage.
-3. IN-DEPTH CONCEPTUAL THEORY:
-   - Deep explanation of the core principles aligned with the NCERT Class 11/12 textbook syllabus.
-   - Comprehensive derivations, physical meaning, and mathematical modeling.
-   - All formulas MUST be properly formatted in clean LaTeX:
-     - Inline math enclosed in single dollar signs: $E = h\\nu$ or $I = \\frac{1}{2} M R^2$.
-     - Display equations enclosed in double dollar signs: $$\\int_{0}^{\\pi/2} \\ln(\\sin x) dx = -\\frac{\\pi}{2} \\ln 2$$.
-4. EXAM-WINNING SHORTCUTS & MNEMONICS:
-   - Speed techniques, dimensional analysis tricks, and symmetry shortcuts.
-5. COMMON TRAPS & FREQUENT MISTAKES (PITFALLS):
-   - 3 specific subtle traps where students lose marks in JEE/NEET.
-6. 3 FULLY WORKED PRACTICE PROBLEMS:
-   - Problem 1: JEE Main / NEET Standard Numerical (with step-by-step calculation & final answer).
-   - Problem 2: JEE Advanced / High-Order NEET Multi-Concept Problem (with detailed step-by-step breakdown).
-   - Problem 3: Conceptual / Assertion-Reason Type Question (with clear logical reasoning).
-7. SUMMARY FORMULA CHEAT-SHEET TABLE:
-   - Markdown table summarizing the fundamental equations, SI units, and conditions of applicability.
+CONTENT GOALS:
+- Give genuinely useful advice that readers can apply immediately.
+- Write for an international audience across the USA, Canada, UK, Australia, New Zealand, Germany, Singapore, UAE, Ireland, Netherlands, France, and other markets.
+- Use natural global English.
+- Do not assume one country's hiring system unless the topic specifically requires it.
+- Avoid keyword stuffing, exaggerated promises, fake statistics, unsupported claims, and repetitive filler.
+- Never claim guaranteed employment, guaranteed interview success, or guaranteed AI results.
+
+MANDATORY STRUCTURE:
+1. TITLE: Clear, compelling SEO-friendly title matching the main search intent.
+2. EXCERPT: Concise 2-3 sentence summary explaining what the reader will learn.
+3. INTRODUCTION: Explain the reader problem and the purpose of the article.
+4. CORE EDUCATIONAL CONTENT: Use clear H2 and H3 headings. Explain concepts step by step. Include practical examples, interview answers, frameworks, checklists, or action steps where relevant. For English topics, provide natural professional phrases and explain when to use them. For AI topics, explain realistic benefits, limitations, and best practices.
+5. PRACTICAL ACTION PLAN: Give a simple step-by-step plan readers can follow immediately.
+6. COMMON MISTAKES: Include at least 5 realistic mistakes or pitfalls and explain how to avoid them.
+7. FAQ: Include 4-6 useful frequently asked questions with concise answers.
+8. CONCLUSION: Summarize the key lessons and give an encouraging next step without making guarantees.
+9. VSTUDYHUB INTERNAL LINK SUGGESTIONS: Naturally suggest relevant VStudyHub routes including /ai-interview, /ai-career-coach, and /blog when useful. Do not invent other VStudyHub URLs.
+
+SEO REQUIREMENTS:
+- Identify the primary search intent from the topic.
+- Naturally use relevant variations and long-tail phrases.
+- Use semantic terms related to interviews, careers, professional English, communication, job preparation, or AI coaching as appropriate.
+- Prioritize helpfulness and readability over keyword density.
+- Do not use fake search volume, rankings, statistics, or claims about Google.
+- The article must be original and must not reproduce another website's content.
+
+FORMATTING:
+- Return complete Markdown in content_md.
+- Use Markdown headings, bullet lists, numbered lists, tables, and blockquotes only when they improve clarity.
+- Do not include HTML.
+- Do not invent citations or sources.
 
 Return ONLY a valid JSON object matching this schema:
 {
   "title": "String (Article Title)",
   "excerpt": "String (2-3 sentences overview)",
-  "content_md": "String (Complete Markdown text with LaTeX equations, headings, practice problems, and tables)",
-  "category": "Physics | Chemistry | Mathematics | Biology",
+  "content_md": "String (Complete Markdown article with headings, examples, action plan, mistakes, FAQ, conclusion, and internal-link suggestions)",
+  "category": "Career",
   "tags": ["Array", "of", "4-6", "relevant", "tags"],
   "reading_minutes": Number (Estimated reading time between 6 and 10)
-}`;
+}
+`;
 
     log('Generating article content via Gemini API (model: gemini-3.7-flash)...');
     let generatedData: any = null;
@@ -314,13 +313,13 @@ Return ONLY a valid JSON object matching this schema:
     // 6. FIRESTORE PERSISTENCE VIA REST API
     // ------------------------------------------------------------------------
     const title = generatedData.title || finalTopic;
-    const excerpt = generatedData.excerpt || `Comprehensive JEE & NEET guide for ${finalTopic}.`;
+    const excerpt = generatedData.excerpt || `Practical career, interview, and professional English guidance for ${finalTopic}.`;
     const content = generatedData.content_md;
     const category = generatedData.category || defaultCategory;
     const readingTime = Number(generatedData.reading_minutes) || Math.max(6, Math.ceil(content.split(/\s+/).length / 200));
     const tags = Array.isArray(generatedData.tags) && generatedData.tags.length > 0
       ? generatedData.tags
-      : [category, 'JEE Main', 'NEET', 'NCERT Revision', 'Formula Sheet'];
+      : [category, 'AI Interview', 'Career Coaching', 'Professional English', 'Job Interview', 'Global Careers'];
 
     const safeSlugTitle = title
       .toLowerCase()

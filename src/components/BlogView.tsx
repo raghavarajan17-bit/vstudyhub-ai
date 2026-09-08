@@ -23,7 +23,7 @@ export const BlogView: React.FC<BlogViewProps> = ({ initialSlug, onOpenAiWithCon
   const [activePost, setActivePost] = useState<BlogPost | null>(null);
   const [copied, setCopied] = useState<boolean>(false);
 
-  const categories = ['All', 'Physics', 'Chemistry', 'Mathematics', 'Biology', 'JEE', 'NEET'];
+  const categories = ['All', 'Career', 'Physics', 'Chemistry', 'Mathematics', 'Biology', 'JEE', 'NEET'];
 
   // Load published blog posts from Cloud Firestore
   const fetchPosts = async () => {
@@ -578,7 +578,7 @@ const renderFormattedContent = (content?: string | null) => {
                 {activePost.author || 'VStudyHub Expert Faculty'}
               </p>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                JEE & NEET Exam Mentor • VStudyHub Academic Content
+                JEE & NEET Exam Mentor ï¿½ VStudyHub Academic Content
               </p>
             </div>
           </div>

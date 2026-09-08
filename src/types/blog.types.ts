@@ -2,7 +2,8 @@ export type BlogCategory =
   | "Physics"
   | "Chemistry"
   | "Mathematics"
-  | "Biology";
+  | "Biology"
+  | "Career";
 
 export interface BlogPost {
   id: string;
