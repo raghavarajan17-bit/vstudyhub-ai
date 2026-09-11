@@ -1,120 +1,56 @@
-import { GoogleGenAI } from "@google/genai";
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-});
-
-export interface EnglishCoachRequest {
-  mode?: "Speaking" | "Writing" | "Interview" | "General";
-  text: string;
-  target?: string;
-  level?: string;
-}
-
-export interface EnglishCoachResponse {
-  corrected: string;
-  score: number;
-  strengths: string[];
-  improvements: string[];
-  betterVersion: string;
-  feedback: string;
-}
-
-export default async function handler(req: any, res: any) {
-  if (req.method !== "POST") {
-    return res.status(405).json({
-      error: "Method not allowed",
-    });
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    return res.status(500).json({ error: 'GEMINI_API_KEY is not configured.' });
+  }
+
+  const { mode, userMessage } = req.body;
+
+  const systemInstruction = `You are an elite English Communication and Interview Coach on VStudyHub.
+Your goal is to help users speak clear, professional, and impactful English for global career opportunities.
+
+Current Coaching Mode: ${mode || 'interview'}
+
+Instructions:
+1. Evaluate the user's latest response for vocabulary, grammar, and tone.
+2. High-impact rule: If they used weak or passive verbs (e.g., "did", "worked on", "helped with"), suggest stronger action verbs (e.g., "spearheaded", "engineered", "orchestrated").
+3. Keep feedback encouraging, concise, and structured:
+   - Brief Feedback / Grammar Check
+   - Vocabulary Enhancement (1-2 strong verb suggestions)
+   - One direct follow-up question to keep the interview session moving forward.`;
+
   try {
-    const body: EnglishCoachRequest = req.body || {};
+    const formattedPrompt = `${systemInstruction}\n\nUser Input: ${userMessage}`;
 
-    const text = String(body.text || "").trim();
-    const mode = body.mode || "General";
-    const target = body.target || "International English";
-    const level = body.level || "Intermediate";
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: formattedPrompt }] }],
+        }),
+      }
+    );
 
-    if (!text) {
-      return res.status(400).json({
-        error: "Please provide English text to evaluate.",
-      });
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error('Gemini API Error:', data);
+      return res.status(response.status).json({ error: data.error?.message || 'Failed to generate response' });
     }
 
-    const prompt = `
-You are VStudyHub AI English Coach.
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
-Evaluate the user's English and help them improve for global communication.
-
-Mode: ${mode}
-Target: ${target}
-Level: ${level}
-
-User response:
-"${text}"
-
-Return ONLY valid JSON with exactly these fields:
-
-{
-  "corrected": "corrected version of the user's response",
-  "score": 0,
-  "strengths": ["strength 1", "strength 2", "strength 3"],
-  "improvements": ["improvement 1", "improvement 2", "improvement 3"],
-  "betterVersion": "a natural, professional and fluent version",
-  "feedback": "short encouraging coaching feedback"
-}
-
-Scoring:
-- 90-100 = Excellent
-- 75-89 = Good
-- 60-74 = Developing
-- below 60 = Needs improvement
-
-Focus on:
-1. Grammar
-2. Vocabulary
-3. Clarity
-4. Natural English
-5. Professional/global communication
-
-Do not be unnecessarily harsh.
-Give practical feedback suitable for a non-native English speaker.
-`;
-
-    const result = await ai.models.generateContent({
-      model: "gemini-3.6-flash",
-      contents: prompt,
-      config: {
-        temperature: 0.3,
-        responseMimeType: "application/json",
-      },
-    });
-
-    const raw = result.text || "";
-
-    let parsed: EnglishCoachResponse;
-
-    try {
-      parsed = JSON.parse(raw);
-    } catch {
-      return res.status(502).json({
-        error: "AI returned an invalid response.",
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      data: parsed,
-    });
-  } catch (error: any) {
-    console.error("AI English Coach error:", error);
-
-    return res.status(500).json({
-      error: "English Coach is temporarily unavailable.",
-      details:
-        process.env.NODE_ENV === "development"
-          ? error?.message
-          : undefined,
-    });
+    return res.status(200).json({ reply });
+  } catch (error) {
+    console.error('Server error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 }
