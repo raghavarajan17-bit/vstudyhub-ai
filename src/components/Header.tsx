@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
-  Atom, Search, Flame, Moon, Sun, Menu, X, Sparkles, BookOpen,
-Calculator, BrainCircuit, HelpCircle, Trophy, Layers, Filter, User, Award, Shield, Newspaper, MessageSquareText, Target
+  Atom, Search, Moon, Sun, Menu, X, Sparkles, BookOpen, 
+  Calculator, BrainCircuit, HelpCircle, Trophy, Layers, Filter, Award, Shield, Newspaper, FileText, Target, Languages
 } from 'lucide-react';
 import { ExamType, ClassLevel, StudentProfile } from '../types';
 
@@ -23,14 +23,11 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   selectedExam,
   onExamChange,
-  selectedClass,
-  onClassChange,
   activeTab,
   onTabChange,
   onOpenSearch,
   onOpenAccountModal,
   profile,
-  streakDays,
   darkMode,
   onToggleDarkMode,
 }) => {
@@ -40,11 +37,13 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'home', label: 'Overview', icon: BookOpen },
     { id: 'progress', label: 'Dashboard', icon: Trophy },
     { id: 'subjects', label: 'Subjects & Notes', icon: Layers },
+    { id: 'resources', label: 'Free Resources', icon: FileText, badge: 'PDF' },
     { id: 'formulas', label: 'Formulas', icon: Calculator },
     { id: 'blog', label: 'Blog', icon: Newspaper },
     { id: 'ai-tutor', label: 'AI Tutor', icon: Sparkles, badge: 'AI' },
-{ id: 'ai-career-coach', label: 'AI Career Coach', icon: Target, badge: 'GLOBAL' },
-    { id: 'ai-interview', label: 'AI Interview', icon: MessageSquareText, badge: 'AI' },
+    { id: 'ai-career-coach', label: 'AI Career Coach', icon: Target },
+    { id: 'ai-english-coach', label: 'AI English Coach', icon: Languages, badge: 'GLOBAL' },
+    { id: 'ai-interview', label: 'AI Interview', icon: BrainCircuit },
     { id: 'gamification', label: 'Leaderboard', icon: Award },
     { id: 'quizzes', label: 'Quizzes', icon: HelpCircle },
   ];
@@ -53,14 +52,35 @@ export const Header: React.FC<HeaderProps> = ({
     navItems.push({ id: 'admin', label: 'Admin Portal', icon: Shield, badge: 'FACULTY' });
   }
 
+  const getHrefForTab = (tabId: string): string => {
+    switch (tabId) {
+      case 'home': return '/';
+      case 'subjects': return '/subjects';
+      case 'resources': return '/resources';
+      case 'formulas': return '/formulas';
+      case 'blog': return '/blog';
+      case 'ai-tutor': return '/ai-tutor';
+      case 'ai-career-coach': return '/ai-career-coach';
+      case 'ai-english-coach': return '/ai-english-coach';
+      case 'ai-interview': return '/ai-interview';
+      case 'gamification': return '/gamification';
+      case 'quizzes': return '/quizzes';
+      case 'progress': return '/progress';
+      case 'admin': return '/admin';
+      default: return '/';
+    }
+  };
+
   return (
     <header className="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          
-          {/* Logo */}
-          <div 
-            onClick={() => onTabChange('home')}
+          <a 
+            href="/"
+            onClick={(e) => {
+              e.preventDefault();
+              onTabChange('home');
+            }}
             className="flex items-center gap-2.5 cursor-pointer group select-none"
           >
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
@@ -76,42 +96,42 @@ export const Header: React.FC<HeaderProps> = ({
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                AI Interview & English Coach for Global Careers
+                JEE & NEET Exam Platform
               </p>
             </div>
-          </div>
+          </a>
 
-          {/* Center Navigation Links (Desktop) */}
-          <nav className="hidden xl:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
               return (
-                <button
+                <a
                   key={item.id}
-                  onClick={() => onTabChange(item.id)}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all relative ${
+                  href={getHrefForTab(item.id)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onTabChange(item.id);
+                  }}
+                  className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-xs font-semibold transition-all relative whitespace-nowrap ${
                     isActive
                       ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 font-bold'
                       : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400'}`} />
+                  <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400'}`} />
                   <span>{item.label}</span>
                   {item.badge && (
                     <span className="text-[9px] font-black px-1.5 py-0.2 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white">
                       {item.badge}
                     </span>
                   )}
-                </button>
+                </a>
               );
             })}
           </nav>
 
-          {/* Right Actions (Account, Exam Toggle, Search, Streak, Theme) */}
           <div className="flex items-center gap-2 sm:gap-3">
-            
-            {/* Exam Toggle Pill */}
             <div className="hidden sm:flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-lg border border-slate-200/80 dark:border-slate-700/80 text-xs font-semibold">
               <button
                 onClick={() => onExamChange('JEE')}
@@ -145,7 +165,6 @@ export const Header: React.FC<HeaderProps> = ({
               </button>
             </div>
 
-            {/* Global Search Button */}
             <button
               onClick={onOpenSearch}
               className="p-2 sm:px-3 sm:py-1.5 flex items-center gap-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs transition-colors border border-slate-200 dark:border-slate-700"
@@ -155,7 +174,6 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="hidden md:inline">Search...</span>
             </button>
 
-            {/* Student Account Profile Button */}
             <button
               onClick={onOpenAccountModal}
               className="flex items-center gap-2 p-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors border border-slate-200/80 dark:border-slate-700/80"
@@ -171,7 +189,6 @@ export const Header: React.FC<HeaderProps> = ({
               </span>
             </button>
 
-            {/* Dark Mode Toggle */}
             <button
               onClick={onToggleDarkMode}
               className="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
@@ -180,10 +197,9 @@ export const Header: React.FC<HeaderProps> = ({
               {darkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-slate-600" />}
             </button>
 
-            {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="xl:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+              className="lg:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -191,11 +207,8 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="xl:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 pt-2 pb-6 space-y-3">
-          
-          {/* Exam Selector for Mobile */}
+        <div className="lg:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 pt-2 pb-6 space-y-3">
           <div className="flex items-center justify-between p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
             <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-1">
               <Filter className="w-3.5 h-3.5" /> Target Exam:
@@ -222,15 +235,16 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
 
-          {/* Navigation Links */}
           <div className="space-y-1">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
               return (
-                <button
+                <a
                   key={item.id}
-                  onClick={() => {
+                  href={getHrefForTab(item.id)}
+                  onClick={(e) => {
+                    e.preventDefault();
                     onTabChange(item.id);
                     setMobileMenuOpen(false);
                   }}
@@ -249,7 +263,7 @@ export const Header: React.FC<HeaderProps> = ({
                       {item.badge}
                     </span>
                   )}
-                </button>
+                </a>
               );
             })}
           </div>
@@ -258,4 +272,3 @@ export const Header: React.FC<HeaderProps> = ({
     </header>
   );
 };
-
