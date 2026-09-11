@@ -1,24 +1,15 @@
 {
-  "version": 2,
-  "functions": {
-    "api/**/*.ts": {
-      "memory": 1024,
-      "maxDuration": 60
-    }
-  },
-  "crons": [
-    {
-      "path": "/api/generate-daily-post",
-     "schedule": "0 13 * * *"
-    }
-  ],
   "rewrites": [
     {
       "source": "/sitemap.xml",
       "destination": "/api/sitemap"
     },
     {
-      "source": "/:path((?!api/|assets/|favicon\\.ico|robots\\.txt).*)",
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
+    {
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
