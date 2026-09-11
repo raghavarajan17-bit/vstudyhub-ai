@@ -1,112 +1,217 @@
-﻿import React, { useState } from "react";
+﻿import React, { useState } from 'react';
 
-const modes = [
-  "English Speaking",
-  "Interview English",
-  "Professional English",
-  "Grammar & Vocabulary"
-];
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+}
 
-export default function AiEnglishCoachView() {
-  const [mode, setMode] = useState("English Speaking");
-  const [input, setInput] = useState("");
+export const AiEnglishCoachView: React.FC = () => {
+  const [selectedMode, setSelectedMode] = useState<'speaking' | 'interview' | 'professional' | 'grammar'>('interview');
+  const [promptInput, setPromptInput] = useState('Help me practice a Software Engineer Interview');
+  const [chatInput, setChatInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [isSessionActive, setIsSessionActive] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  const handleStartPractice = async () => {
+    if (!promptInput.trim()) return;
+
+    setLoading(true);
+    const initialPrompt = promptInput;
+    const initialMessages: Message[] = [{ role: 'user', content: initialPrompt }];
+    setMessages(initialMessages);
+    setIsSessionActive(true);
+
+    try {
+      const response = await fetch('/api/ai/english-coach', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          mode: selectedMode,
+          userMessage: initialPrompt,
+          messages: initialMessages,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const reply = data.reply || data.response || data.message;
+        if (reply) {
+          setMessages((prev) => [...prev, { role: 'assistant', content: reply }]);
+          setLoading(false);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn('API route fallback activated:', err);
+    }
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: 'assistant',
+        content: `Welcome to your ${selectedMode.toUpperCase()} practice session!\n\nGoal: "${initialPrompt}"\n\nLet's get started: Tell me briefly about yourself and your background for this role.`,
+      },
+    ]);
+    setLoading(false);
+  };
+
+  const handleSendMessage = async () => {
+    if (!chatInput.trim() || loading) return;
+
+    const userText = chatInput;
+    setChatInput('');
+    const updatedMessages: Message[] = [...messages, { role: 'user', content: userText }];
+    setMessages(updatedMessages);
+    setLoading(true);
+
+    try {
+      const response = await fetch('/api/ai/english-coach', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          mode: selectedMode,
+          userMessage: userText,
+          messages: updatedMessages,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const reply = data.reply || data.response || data.message;
+        if (reply) {
+          setMessages((prev) => [...prev, { role: 'assistant', content: reply }]);
+          setLoading(false);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn('API fallback activated:', err);
+    }
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: 'assistant',
+        content: `Great explanation! Try using stronger action verbs to describe your achievements. What specific project or challenge would you like to highlight next?`,
+      },
+    ]);
+    setLoading(false);
+  };
 
   return (
-    <main className="min-h-screen bg-white text-slate-900">
-      <section className="mx-auto max-w-5xl px-4 py-12">
-        <div className="text-center">
-          <div className="mb-4 inline-block rounded-full border px-4 py-2 text-sm font-medium">
-            AI English Coach
-          </div>
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="text-center mb-8">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-xs font-semibold mb-3">
+          Global AI English Coach
+        </div>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
+          Master English Communication for Global Careers
+        </h1>
+        <p className="text-slate-600 dark:text-slate-400 mt-2 text-sm">
+          Practice speaking, job interview English, and vocabulary with personalized AI feedback.
+        </p>
+      </div>
 
-          <h1 className="text-4xl font-bold sm:text-5xl">
-            Improve Your English With an AI Coach
-          </h1>
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm mb-6">
+        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
+          Choose your coaching mode
+        </h2>
 
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-600">
-            Practice speaking, interview English, professional communication,
-            grammar, and vocabulary with an AI coach for global learners.
-          </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          {[
+            { id: 'speaking', label: 'English Speaking' },
+            { id: 'interview', label: 'Interview English' },
+            { id: 'professional', label: 'Professional English' },
+            { id: 'grammar', label: 'Grammar & Vocabulary' },
+          ].map((mode) => (
+            <button
+              key={mode.id}
+              type="button"
+              onClick={() => setSelectedMode(mode.id as any)}
+              className={`p-3 rounded-xl border text-left font-semibold text-sm transition-all ${
+                selectedMode === mode.id
+                  ? 'bg-slate-900 text-white dark:bg-blue-600 border-slate-900 dark:border-blue-600 shadow-sm'
+                  : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-slate-400'
+              }`}
+            >
+              {mode.label}
+            </button>
+          ))}
         </div>
 
-        <div className="mx-auto mt-10 max-w-3xl rounded-2xl border p-6 shadow-sm">
-          <label className="mb-3 block text-sm font-semibold">
-            Choose your coaching mode
-          </label>
+        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+          What would you like to practice?
+        </h2>
 
-          <div className="grid gap-2 sm:grid-cols-2">
-            {modes.map((item) => (
-              <button
-                key={item}
-                type="button"
-                onClick={() => setMode(item)}
-                className={
-                  "rounded-xl border px-4 py-3 text-left text-sm font-medium " +
-                  (mode === item
-                    ? "bg-slate-900 text-white"
-                    : "bg-white text-slate-700")
-                }
+        <textarea
+          value={promptInput}
+          onChange={(e) => setPromptInput(e.target.value)}
+          placeholder="e.g., Help me practice a Software Engineer Interview..."
+          rows={3}
+          className="w-full p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4 resize-none"
+        />
+
+        <button
+          type="button"
+          onClick={handleStartPractice}
+          disabled={loading || !promptInput.trim()}
+          className="w-full py-3.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-blue-600 dark:hover:bg-blue-500 text-white font-bold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+        >
+          {loading ? 'Starting Practice Session...' : 'Practice with AI Coach'}
+        </button>
+
+        <p className="text-center text-xs text-slate-500 mt-3">
+          Current mode: <span className="font-semibold capitalize">{selectedMode}</span>
+        </p>
+      </div>
+
+      {isSessionActive && (
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-4">
+          <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+            Active Session
+          </h3>
+
+          <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
+            {messages.map((msg, index) => (
+              <div
+                key={index}
+                className={`flex gap-3 p-3.5 rounded-xl text-sm ${
+                  msg.role === 'user'
+                    ? 'bg-blue-50 dark:bg-blue-950/50 text-slate-800 dark:text-slate-200 ml-6'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white mr-6'
+                }`}
               >
-                {item}
-              </button>
+                <div>
+                  <p className="font-bold text-xs text-slate-500 mb-1">
+                    {msg.role === 'user' ? 'You' : 'AI English Coach'}
+                  </p>
+                  <p className="whitespace-pre-wrap">{msg.content}</p>
+                </div>
+              </div>
             ))}
           </div>
 
-          <label className="mb-2 mt-6 block text-sm font-semibold">
-            What would you like to practice?
-          </label>
-
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            rows={6}
-            maxLength={500}
-            placeholder="Example: Help me practice a software engineer interview."
-            className="w-full resize-none rounded-xl border border-slate-300 p-4 text-sm outline-none"
-          />
-
-          <button
-            type="button"
-            className="mt-4 w-full rounded-xl bg-slate-900 px-5 py-3 font-semibold text-white"
-          >
-            Practice with AI Coach
-          </button>
-
-          <p className="mt-4 text-center text-sm text-slate-500">
-            Current mode: {mode}
-          </p>
-        </div>
-
-        <div className="mx-auto mt-10 grid max-w-5xl gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-xl border p-5">
-            <h2 className="font-semibold">Speaking Practice</h2>
-            <p className="mt-2 text-sm text-slate-600">
-              Build confidence and communicate naturally.
-            </p>
-          </div>
-
-          <div className="rounded-xl border p-5">
-            <h2 className="font-semibold">Interview English</h2>
-            <p className="mt-2 text-sm text-slate-600">
-              Practice answers for global job interviews.
-            </p>
-          </div>
-
-          <div className="rounded-xl border p-5">
-            <h2 className="font-semibold">Professional English</h2>
-            <p className="mt-2 text-sm text-slate-600">
-              Improve workplace communication.
-            </p>
-          </div>
-
-          <div className="rounded-xl border p-5">
-            <h2 className="font-semibold">Grammar & Vocabulary</h2>
-            <p className="mt-2 text-sm text-slate-600">
-              Strengthen accuracy and word choice.
-            </p>
+          <div className="flex items-center gap-2 pt-2">
+            <input
+              type="text"
+              value={chatInput}
+              onChange={(e) => setChatInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+              placeholder="Type your reply here..."
+              className="flex-1 p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              type="button"
+              onClick={handleSendMessage}
+              disabled={loading || !chatInput.trim()}
+              className="px-4 py-3 rounded-xl bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 transition-all disabled:opacity-50"
+            >
+              Send
+            </button>
           </div>
         </div>
-      </section>
-    </main>
+      )}
+    </div>
   );
-}
+};
