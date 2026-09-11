@@ -6,7 +6,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
 import { MOCK_CHAPTERS, MOCK_FORMULAS, MOCK_FLASHCARDS, MOCK_NOTES, MOCK_QUIZZES } from "./src/data/mockData";
 import Stripe from "stripe";
-import careerCoachHandler from "./api/ai/career-coach";
+import careerCoachHandler from "./api/english-coach";
 dotenv.config();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 
