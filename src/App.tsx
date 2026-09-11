@@ -1,5 +1,5 @@
-﻿import AiEnglishCoachView from "./views/AiEnglishCoachView";
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
+import { AiEnglishCoachView } from './components/AiEnglishCoachView';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { ExamBanner } from './components/ExamBanner';
@@ -21,8 +21,8 @@ import { BlogView } from './components/BlogView';
 
 import { ExamType, ClassLevel, SubjectId, UserProgress, StudentProfile } from './types';
 import { getStoredProgress, saveStoredProgress } from './lib/storage';
-import { auth, signInAnonymously } from './lib/firebase';
-import { syncProgressToFirestore, subscribeToUserProgress } from './lib/firestoreSync';
+import { auth } from './lib/firebase';
+import { syncProgressToFirestore } from './lib/firestoreSync';
 
 export default function App() {
   const [userProgress, setUserProgress] = useState<UserProgress>(getStoredProgress);
@@ -66,21 +66,21 @@ export default function App() {
 
   // Handler for tab selection with URL pushstate
   const handleTabChange = (tab: string) => {
-  setActiveTab(tab);
-  if (tab !== 'subjects') setActiveNoteId(null);
+    setActiveTab(tab);
+    if (tab !== 'subjects') setActiveNoteId(null);
 
-  if (tab === 'ai-english-coach') {
-    window.history.pushState({}, '', '/ai-english-coach');
-  } else if (tab === 'ai-interview') {
-    window.history.pushState({}, '', '/ai-interview');
-  } else if (tab === 'ai-career-coach') {
-    window.history.pushState({}, '', '/ai-career-coach');
-  } else if (tab === 'blog') {
-    window.history.pushState({}, '', '/blog');
-  } else if (tab === 'home') {
-    window.history.pushState({}, '', '/');
-  }
-};
+    if (tab === 'ai-english-coach') {
+      window.history.pushState({}, '', '/ai-english-coach');
+    } else if (tab === 'ai-interview') {
+      window.history.pushState({}, '', '/ai-interview');
+    } else if (tab === 'ai-career-coach') {
+      window.history.pushState({}, '', '/ai-career-coach');
+    } else if (tab === 'blog') {
+      window.history.pushState({}, '', '/blog');
+    } else if (tab === 'home') {
+      window.history.pushState({}, '', '/');
+    }
+  };
 
   // Initialize Firebase Auth listener
   useEffect(() => {
@@ -88,7 +88,6 @@ export default function App() {
       if (user) {
         setCurrentUserId(user.uid);
       } else {
-        // Fallback to email or persistent device ID when not logged in with Google
         let localDeviceId = localStorage.getItem('vstudyhub_device_id');
         if (!localDeviceId) {
           localDeviceId = `student-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
@@ -101,7 +100,7 @@ export default function App() {
     return () => unsub();
   }, []);
 
-  // Sync state to local storage & Firestore whenever progress changes
+  // Sync state to local storage & Firestore
   useEffect(() => {
     saveStoredProgress(userProgress);
     if (currentUserId) {
@@ -118,22 +117,18 @@ export default function App() {
     }
   }, [darkMode]);
 
-  // Handler for exam filter
   const handleExamChange = (exam: ExamType) => {
     setUserProgress((prev) => ({ ...prev, selectedExam: exam }));
   };
 
-  // Handler for class filter
   const handleClassChange = (cls: ClassLevel | 'all') => {
     setUserProgress((prev) => ({ ...prev, selectedClass: cls }));
   };
 
-  // Handler for profile updates
   const handleSaveProfile = (profile: StudentProfile) => {
     setUserProgress((prev) => ({ ...prev, profile }));
   };
 
-  // Toggle formula bookmark
   const handleToggleFormulaBookmark = (formulaId: string) => {
     setUserProgress((prev) => {
       const exists = prev.bookmarkedFormulas.includes(formulaId);
@@ -144,7 +139,6 @@ export default function App() {
     });
   };
 
-  // Toggle note bookmark
   const handleToggleNoteBookmark = (noteId: string) => {
     setUserProgress((prev) => {
       const exists = prev.bookmarkedNotes.includes(noteId);
@@ -155,7 +149,6 @@ export default function App() {
     });
   };
 
-  // Record quiz score
   const handleRecordQuizScore = (quizId: string, score: number, total: number, percentage: number) => {
     setUserProgress((prev) => {
       const addedXp = percentage >= 80 ? 150 : 75;
@@ -182,7 +175,6 @@ export default function App() {
     });
   };
 
-  // Update flashcard confidence
   const handleUpdateFlashcardConfidence = (cardId: string, rating: 'know' | 'review' | 'hard') => {
     setUserProgress((prev) => {
       const filtered = prev.flashcardStats.filter((s) => s.cardId !== cardId);
@@ -249,9 +241,7 @@ export default function App() {
                 onBack={() => setActiveNoteId(null)}
                 bookmarkedNoteIds={userProgress.bookmarkedNotes}
                 onToggleBookmarkNote={handleToggleNoteBookmark}
-                onOpenAiWithContext={(ctx) => {
-                  setActiveTab('ai-tutor');
-                }}
+                onOpenAiWithContext={() => setActiveTab('ai-tutor')}
               />
             ) : (
               <ChapterListView
@@ -285,9 +275,7 @@ export default function App() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <BlogView
               initialSlug={initialBlogSlug}
-              onOpenAiWithContext={(ctx) => {
-                setActiveTab('ai-tutor');
-              }}
+              onOpenAiWithContext={() => setActiveTab('ai-tutor')}
             />
           </div>
         )}
@@ -308,16 +296,19 @@ export default function App() {
             <AiDoubtAssistant selectedExam={userProgress.selectedExam} />
           </div>
         )}
-        {/* AI Interview & English Coach Tab */}
+
+        {/* AI English Coach Tab */}
         {activeTab === 'ai-english-coach' && (
           <AiEnglishCoachView />
         )}
 
+        {/* AI Career Coach Tab */}
         {activeTab === 'ai-career-coach' && (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <AiCareerCoachView />
           </div>
         )}
+
         {/* AI Interview Practice Tab */}
         {activeTab === 'ai-interview' && (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -398,8 +389,3 @@ export default function App() {
     </div>
   );
 }
-
-
-
-
-
