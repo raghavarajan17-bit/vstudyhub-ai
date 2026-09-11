@@ -10,7 +10,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ error: 'GEMINI_API_KEY is not configured.' });
   }
 
-  const { mode, userMessage } = req.body || {};
+  const { mode, userMessage, history } = req.body || {};
 
   const systemInstruction = `You are an elite English Communication and Interview Coach on VStudyHub.
 Your goal is to help users speak clear, professional, and impactful English for global career opportunities.
@@ -18,23 +18,39 @@ Your goal is to help users speak clear, professional, and impactful English for 
 Current Coaching Mode: ${mode || 'interview'}
 
 Instructions:
-1. Evaluate the user's latest response for vocabulary, grammar, and tone.
-2. High-impact rule: If they used weak or passive verbs (e.g., "did", "worked on", "helped with"), suggest stronger action verbs (e.g., "spearheaded", "engineered", "orchestrated").
-3. Keep feedback encouraging, concise, and structured:
-   - Brief Feedback / Grammar Check
-   - Vocabulary Enhancement (1-2 strong verb suggestions)
-   - One direct follow-up question to keep the interview session moving forward.`;
+1. Evaluate the user's latest message for vocabulary, grammar, and tone.
+2. If passive or weak verbs are used, suggest 1-2 strong action verbs.
+3. Advance the practice session by asking a logical, dynamic follow-up question. DO NOT repeat past questions or generic responses.`;
+
+  // Format past history into structured contents for Gemini
+  const contents = [];
+
+  if (Array.isArray(history) && history.length > 0) {
+    history.forEach((msg: { role: string; text: string }) => {
+      contents.push({
+        role: msg.role === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.text }]
+      });
+    });
+  }
+
+  // Append the current user message
+  contents.push({
+    role: 'user',
+    parts: [{ text: userMessage || '' }]
+  });
 
   try {
-    const formattedPrompt = `${systemInstruction}\n\nUser Input: ${userMessage || ''}`;
-
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: formattedPrompt }] }],
+          system_instruction: {
+            parts: [{ text: systemInstruction }]
+          },
+          contents: contents
         }),
       }
     );
