@@ -24,7 +24,7 @@ export const AiEnglishCoachView: React.FC = () => {
     setIsSessionActive(true);
 
     try {
-      const response = await fetch('/api/ai/english-coach', {
+      const response = await fetch('/api/english-coach', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -68,7 +68,7 @@ export const AiEnglishCoachView: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/ai/english-coach', {
+      const response = await fetch('/api/english-coach', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
