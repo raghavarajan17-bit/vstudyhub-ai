@@ -1,6 +1,4 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -10,7 +8,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ error: 'GEMINI_API_KEY is not configured.' });
   }
 
-  const { mode, userMessage } = req.body;
+  const { mode, userMessage } = req.body || {};
 
   const systemInstruction = `You are an elite English Communication and Interview Coach on VStudyHub.
 Your goal is to help users speak clear, professional, and impactful English for global career opportunities.
@@ -26,7 +24,7 @@ Instructions:
    - One direct follow-up question to keep the interview session moving forward.`;
 
   try {
-    const formattedPrompt = `${systemInstruction}\n\nUser Input: ${userMessage}`;
+    const formattedPrompt = `${systemInstruction}\n\nUser Input: ${userMessage || ''}`;
 
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
