@@ -1,4 +1,5 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import AiEnglishCoachView from "./views/AiEnglishCoachView";
+import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { ExamBanner } from './components/ExamBanner';
@@ -39,7 +40,9 @@ export default function App() {
   useEffect(() => {
     const handleUrlSync = () => {
       const path = window.location.pathname;
-      if (path === '/ai-career-coach') {
+      if (path === '/ai-english-coach') {
+        setActiveTab('ai-english-coach');
+      } else if (path === '/ai-career-coach') {
         setActiveTab('ai-career-coach');
         setInitialBlogSlug(null);
       } else if (path === '/ai-interview') {
@@ -66,7 +69,9 @@ export default function App() {
   setActiveTab(tab);
   if (tab !== 'subjects') setActiveNoteId(null);
 
-  if (tab === 'ai-interview') {
+  if (tab === 'ai-english-coach') {
+    window.history.pushState({}, '', '/ai-english-coach');
+  } else if (tab === 'ai-interview') {
     window.history.pushState({}, '', '/ai-interview');
   } else if (tab === 'ai-career-coach') {
     window.history.pushState({}, '', '/ai-career-coach');
@@ -304,6 +309,10 @@ export default function App() {
           </div>
         )}
         {/* AI Interview & English Coach Tab */}
+        {activeTab === 'ai-english-coach' && (
+          <AiEnglishCoachView />
+        )}
+
         {activeTab === 'ai-career-coach' && (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <AiCareerCoachView />
@@ -389,6 +398,8 @@ export default function App() {
     </div>
   );
 }
+
+
 
 
 
