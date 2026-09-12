@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -23,13 +23,13 @@ export const AiEnglishCoachView: React.FC = () => {
     setIsSessionActive(true);
 
     try {
-      const response = await fetch('/api/ai/english-coach', {
+      const response = await fetch('/api/english-coach', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           mode: selectedMode,
           userMessage: initialPrompt,
-          messages: initialMessages,
+          history: initialMessages.map(m => ({ role: m.role, text: m.content })),
         }),
       });
 
@@ -66,13 +66,13 @@ export const AiEnglishCoachView: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/ai/english-coach', {
+      const response = await fetch('/api/english-coach', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           mode: selectedMode,
           userMessage: userText,
-          messages: updatedMessages,
+          history: updatedMessages.map(m => ({ role: m.role, text: m.content })),
         }),
       });
 
@@ -93,7 +93,7 @@ export const AiEnglishCoachView: React.FC = () => {
       ...prev,
       {
         role: 'assistant',
-        content: `Great explanation! Try using stronger action verbs to describe your achievements. What specific project or challenge would you like to highlight next?`,
+        content: `AI Coach could not connect to the AI service. Please try again.`,
       },
     ]);
     setLoading(false);
