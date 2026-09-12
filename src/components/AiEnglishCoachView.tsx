@@ -12,6 +12,33 @@ export const AiEnglishCoachView: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+
+  const handleStartPro = async () => {
+    if (checkoutLoading) return;
+
+    setCheckoutLoading(true);
+
+    try {
+      const response = await fetch('/api/stripe/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.url) {
+        throw new Error(data.error || 'Unable to start checkout.');
+      }
+
+      window.location.href = data.url;
+    } catch (error) {
+      console.error('Stripe checkout error:', error);
+      alert('Unable to start Pro checkout. Please try again.');
+      setCheckoutLoading(false);
+    }
+  };
 
   const handleStartPractice = async () => {
     if (!promptInput.trim()) return;
@@ -113,6 +140,33 @@ export const AiEnglishCoachView: React.FC = () => {
         </p>
       </div>
 
+      <div className="mb-6 rounded-2xl border border-blue-200 bg-blue-50 p-6 shadow-sm dark:border-blue-900/50 dark:bg-blue-950/30">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <div className="mb-1 text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+              VStudyHub Pro
+            </div>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+              AI English Coach Pro
+            </h2>
+            <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+              Unlimited AI coaching for interviews, professional English, speaking, grammar, and vocabulary.
+            </p>
+            <p className="mt-3 text-lg font-bold text-slate-900 dark:text-white">
+              $19<span className="text-sm font-medium text-slate-500">/month</span>
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleStartPro}
+            disabled={checkoutLoading}
+            className="shrink-0 rounded-xl bg-blue-600 px-6 py-3 font-bold text-white transition-all hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {checkoutLoading ? 'Opening Checkout...' : 'Start Pro - /month'}
+          </button>
+        </div>
+      </div>
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm mb-6">
         <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
           Choose your coaching mode
@@ -215,3 +269,5 @@ export const AiEnglishCoachView: React.FC = () => {
     </div>
   );
 };
+
+
