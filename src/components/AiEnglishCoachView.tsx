@@ -163,7 +163,7 @@ export const AiEnglishCoachView: React.FC = () => {
             disabled={checkoutLoading}
             className="shrink-0 rounded-xl bg-blue-600 px-6 py-3 font-bold text-white transition-all hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {checkoutLoading ? 'Opening Checkout...' : 'Start Pro - /month'}
+            {checkoutLoading ? 'Opening Checkout...' : 'Start Pro - $19/month'}
           </button>
         </div>
       </div>
@@ -269,5 +269,6 @@ export const AiEnglishCoachView: React.FC = () => {
     </div>
   );
 };
+
 
 
