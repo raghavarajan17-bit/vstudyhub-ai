@@ -52,7 +52,7 @@ export const StudentAccountModal: React.FC<StudentAccountModalProps> = ({
         });
       }
     } catch (err: any) {
-      console.log('Google Sign In:', err?.message || err);
+      console.error('Google Sign In:', err?.message || err);
     }
   };
 
@@ -359,3 +359,4 @@ export const StudentAccountModal: React.FC<StudentAccountModalProps> = ({
     </div>
   );
 };
+
