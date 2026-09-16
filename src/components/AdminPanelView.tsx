@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import { SubjectId, ExamType, ClassLevel } from '../types';
 import { saveNoteToFirestore, saveFormulaToFirestore, saveQuizToFirestore } from '../lib/firestoreSync';
-
+import { auth, signInWithPopup, googleProvider } from '../lib/firebase';
 export const AdminPanelView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'notes' | 'formulas' | 'quizzes'>('overview');
   const [metrics, setMetrics] = useState({
@@ -67,6 +67,43 @@ export const AdminPanelView: React.FC = () => {
       .catch((err) => console.error('Failed to load admin metrics', err));
   }, []);
 
+  const [firebaseUser, setFirebaseUser] = useState(auth.currentUser);
+  const ADMIN_EMAIL = 'raghavarajan17@gmail.com';
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setFirebaseUser(user);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const isAdmin = firebaseUser?.email === ADMIN_EMAIL;
+  if (!firebaseUser) {
+    return (
+      <div className="p-8 text-center">
+        <Shield className="mx-auto mb-4 h-12 w-12" />
+        <h2 className="text-2xl font-bold mb-2">Admin Login Required</h2>
+        <p className="mb-6">Sign in with the authorized Google account to access the Admin Panel.</p>
+        <button
+          onClick={() => signInWithPopup(auth, googleProvider)}
+          className="px-6 py-3 rounded-xl font-semibold bg-blue-600 text-white"
+        >
+          Sign in with Google
+        </button>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="p-8 text-center">
+        <Shield className="mx-auto mb-4 h-12 w-12" />
+        <h2 className="text-2xl font-bold mb-2">Access Denied</h2>
+        <p>This Google account is not authorized to access the Admin Panel.</p>
+      </div>
+    );
+  }
   const showToast = (msg: string) => {
     setNotification(msg);
     setTimeout(() => setNotification(null), 4000);
@@ -109,7 +146,7 @@ export const AdminPanelView: React.FC = () => {
         body: JSON.stringify(noteObj),
       }).catch(() => {});
 
-      showToast(`✅ Note "${noteForm.title}" published to Firestore production database!`);
+      showToast(`? Note "${noteForm.title}" published to Firestore production database!`);
       setNoteForm({
         title: '',
         subjectId: 'physics',
@@ -123,7 +160,7 @@ export const AdminPanelView: React.FC = () => {
       });
       setMetrics((prev) => ({ ...prev, notesCount: prev.notesCount + 1 }));
     } catch (err) {
-      showToast('❌ Failed to publish note.');
+      showToast('? Failed to publish note.');
     }
   };
 
@@ -153,7 +190,7 @@ export const AdminPanelView: React.FC = () => {
         body: JSON.stringify(formulaObj),
       }).catch(() => {});
 
-      showToast(`✅ Formula "${formulaForm.title}" added to Firestore Formula Bank!`);
+      showToast(`? Formula "${formulaForm.title}" added to Firestore Formula Bank!`);
       setFormulaForm({
         title: '',
         subjectId: 'physics',
@@ -166,7 +203,7 @@ export const AdminPanelView: React.FC = () => {
       });
       setMetrics((prev) => ({ ...prev, formulasCount: prev.formulasCount + 1 }));
     } catch (err) {
-      showToast('❌ Failed to create formula.');
+      showToast('? Failed to create formula.');
     }
   };
 
@@ -185,7 +222,7 @@ export const AdminPanelView: React.FC = () => {
           {
             id: `q-${Date.now()}`,
             questionText: quizForm.questionText,
-            latex: quizForm.latex || undefined,
+            ...(quizForm.latex ? { latex: quizForm.latex } : {}),
             options: [quizForm.opt0, quizForm.opt1, quizForm.opt2, quizForm.opt3],
             correctAnswerIndex: quizForm.correctIndex,
             explanation: quizForm.explanation,
@@ -205,7 +242,7 @@ export const AdminPanelView: React.FC = () => {
         body: JSON.stringify(quizObj),
       }).catch(() => {});
 
-      showToast(`✅ Quiz "${quizForm.title}" saved to Firestore database!`);
+      showToast(`? Quiz "${quizForm.title}" saved to Firestore database!`);
       setQuizForm({
         title: '',
         subjectId: 'physics',
@@ -221,7 +258,7 @@ export const AdminPanelView: React.FC = () => {
       });
       setMetrics((prev) => ({ ...prev, quizzesCount: prev.quizzesCount + 1 }));
     } catch (err) {
-      showToast('❌ Failed to create quiz.');
+      console.error('Quiz publish error:', err); showToast('? Failed to create quiz: ' + (err?.message || 'Unknown error'));
     }
   };
 
@@ -288,7 +325,7 @@ export const AdminPanelView: React.FC = () => {
               <p className="text-2xl sm:text-3xl font-black text-indigo-600 dark:text-indigo-400">
                 {metrics.totalStudentsActive.toLocaleString()}
               </p>
-              <span className="text-[10px] text-emerald-500 font-bold mt-1 block">↑ +18% this month</span>
+              <span className="text-[10px] text-emerald-500 font-bold mt-1 block">? +18% this month</span>
             </div>
 
             <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
@@ -691,3 +728,6 @@ export const AdminPanelView: React.FC = () => {
     </div>
   );
 };
+
+
+

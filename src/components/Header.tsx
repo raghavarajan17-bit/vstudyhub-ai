@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { 
   Atom, Search, Moon, Sun, Menu, X, Sparkles, BookOpen, 
   Calculator, BrainCircuit, HelpCircle, Trophy, Layers, Filter, Award, Shield, Newspaper, FileText, Target, Languages
@@ -12,6 +12,7 @@ interface HeaderProps {
   onClassChange: (cls: ClassLevel | 'all') => void;
   activeTab: string;
   onTabChange: (tab: string) => void;
+  isAdmin: boolean;
   onOpenSearch: () => void;
   onOpenAccountModal: () => void;
   profile: StudentProfile;
@@ -25,6 +26,7 @@ export const Header: React.FC<HeaderProps> = ({
   onExamChange,
   activeTab,
   onTabChange,
+  isAdmin,
   onOpenSearch,
   onOpenAccountModal,
   profile,
@@ -48,7 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'quizzes', label: 'Quizzes', icon: HelpCircle },
   ];
 
-  if (profile.role === 'teacher' || profile.role === 'admin') {
+  if (isAdmin) {
     navItems.push({ id: 'admin', label: 'Admin Portal', icon: Shield, badge: 'FACULTY' });
   }
 
@@ -272,3 +274,5 @@ export const Header: React.FC<HeaderProps> = ({
     </header>
   );
 };
+
+

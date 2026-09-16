@@ -34,6 +34,7 @@ export default function App() {
   const [isAccountModalOpen, setIsAccountModalOpen] = useState<boolean>(false);
   const [darkMode, setDarkMode] = useState<boolean>(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const isAdmin = auth.currentUser?.email === 'raghavarajan17@gmail.com';
   const [initialBlogSlug, setInitialBlogSlug] = useState<string | null>(null);
 
   // Sync initial URL path and listen for popstate
@@ -196,6 +197,7 @@ export default function App() {
         onClassChange={handleClassChange}
         activeTab={activeTab}
         onTabChange={handleTabChange}
+        isAdmin={isAdmin}
         onOpenSearch={() => setIsSearchOpen(true)}
         onOpenAccountModal={() => setIsAccountModalOpen(true)}
         profile={userProgress.profile}
@@ -217,6 +219,7 @@ export default function App() {
               onClassChange={handleClassChange}
               onOpenSearch={() => setIsSearchOpen(true)}
               onTabChange={handleTabChange}
+        isAdmin={isAdmin}
             />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -227,6 +230,7 @@ export default function App() {
                   setActiveNoteId(null);
                 }}
                 onTabChange={handleTabChange}
+        isAdmin={isAdmin}
               />
             </div>
           </div>
@@ -254,6 +258,7 @@ export default function App() {
                   setActiveTab('quizzes');
                 }}
                 onTabChange={handleTabChange}
+        isAdmin={isAdmin}
               />
             )}
           </div>
@@ -383,9 +388,12 @@ export default function App() {
       {/* Footer */}
       <Footer
         onTabChange={handleTabChange}
+        isAdmin={isAdmin}
         onExamChange={handleExamChange}
       />
 
     </div>
   );
 }
+
+
