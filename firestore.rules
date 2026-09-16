@@ -1,12 +1,12 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    
+
     // User profile documents
     match /users/{userId} {
       allow read, write: if true;
     }
-    
+
     // Per-user study progress, bookmarks, and tasks
     match /userProgress/{userId} {
       allow read, write: if true;
@@ -19,17 +19,29 @@ service cloud.firestore {
 
     // Admin & Faculty managed chapter notes
     match /notes/{noteId} {
-      allow read, write: if true;
+      allow read: if true;
+      allow write: if (
+        request.auth != null &&
+        request.auth.token.email == "raghavarajan17@gmail.com"
+      );
     }
 
     // Admin & Faculty managed formula bank
     match /formulas/{formulaId} {
-      allow read, write: if true;
+      allow read: if true;
+      allow write: if (
+        request.auth != null &&
+        request.auth.token.email == "raghavarajan17@gmail.com"
+      );
     }
 
     // Admin & Faculty managed practice quizzes
     match /quizzes/{quizId} {
-      allow read, write: if true;
+      allow read: if true;
+      allow write: if (
+        request.auth != null &&
+        request.auth.token.email == "raghavarajan17@gmail.com"
+      );
     }
 
     // AI Doubt chat history per user
@@ -37,11 +49,12 @@ service cloud.firestore {
       allow read, write: if true;
     }
 
-    // Publicly accessible Blog Posts (Read-only for public visitors)
+    // Publicly accessible Blog Posts
     match /blogPosts/{postId} {
       allow read: if true;
       allow write: if (
-        request.auth != null && request.auth.token.email == "raghavarajan17@gmail.com"
+        request.auth != null &&
+        request.auth.token.email == "raghavarajan17@gmail.com"
       );
     }
   }
