@@ -354,6 +354,47 @@ export const AdminPanelView: React.FC = () => {
           </div>
 
           <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm mb-6">
+  <div className="flex items-center justify-between mb-4">
+    <div>
+      <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
+        Revenue Snapshot
+      </h3>
+      <p className="text-xs text-slate-500 dark:text-slate-400">
+        Stripe Sandbox / Test Mode
+      </p>
+    </div>
+    <span className="px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-bold">
+      TEST DATA
+    </span>
+  </div>
+
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800">
+      <p className="text-xs text-slate-500">Monthly Revenue</p>
+      <p className="text-xl font-extrabold text-slate-900 dark:text-white">$76</p>
+      <p className="text-xs text-slate-500">Sandbox MRR</p>
+    </div>
+
+    <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800">
+      <p className="text-xs text-slate-500">Active Pro</p>
+      <p className="text-xl font-extrabold text-slate-900 dark:text-white">4</p>
+      <p className="text-xs text-slate-500">Subscriptions</p>
+    </div>
+
+    <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800">
+      <p className="text-xs text-slate-500">Plan Price</p>
+      <p className="text-xl font-extrabold text-slate-900 dark:text-white">$19</p>
+      <p className="text-xs text-slate-500">per month</p>
+    </div>
+
+    <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800">
+      <p className="text-xs text-slate-500">Mode</p>
+      <p className="text-xl font-extrabold text-slate-900 dark:text-white">Sandbox</p>
+      <p className="text-xs text-slate-500">Not live revenue</p>
+    </div>
+  </div>
+</div>
             <h3 className="text-base font-extrabold text-slate-900 dark:text-white mb-4">
               Platform Content Management Quick Actions
             </h3>
