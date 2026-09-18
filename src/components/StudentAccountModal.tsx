@@ -87,7 +87,7 @@ export const StudentAccountModal: React.FC<StudentAccountModalProps> = ({
         <div className="flex flex-col sm:flex-row items-center gap-5 border-b border-slate-100 dark:border-slate-800 pb-6">
           <div className="relative">
             <img
-              src={profile.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250'}
+              src={profile.isLoggedIn ? profile.avatarUrl : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250'}
               alt={profile.isLoggedIn ? profile.name : 'Guest Student'}
               className="w-20 h-20 rounded-2xl object-cover ring-4 ring-indigo-500/30 shadow-md"
             />
