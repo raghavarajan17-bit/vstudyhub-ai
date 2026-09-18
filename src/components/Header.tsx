@@ -182,7 +182,7 @@ export const Header: React.FC<HeaderProps> = ({
               title="Student Profile & Account Settings"
             >
               <img
-                src={profile.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150'}
+                src={profile.isLoggedIn ? profile.avatarUrl : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150'}
                 alt={profile.isLoggedIn ? profile.name : ''}
                 className="w-7 h-7 rounded-lg object-cover ring-2 ring-indigo-500/50"
               />
