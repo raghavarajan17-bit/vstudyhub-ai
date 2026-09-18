@@ -59,6 +59,7 @@ export const StudentAccountModal: React.FC<StudentAccountModalProps> = ({
   const handleSignOut = async () => {
     await signOut(auth);
     onUpdateProfile({ isLoggedIn: false });
+    onClose();
   };
 
   const handleSave = (e: React.FormEvent) => {
@@ -87,7 +88,7 @@ export const StudentAccountModal: React.FC<StudentAccountModalProps> = ({
           <div className="relative">
             <img
               src={profile.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250'}
-              alt={profile.name}
+              alt={profile.isLoggedIn ? profile.name : 'Guest Student'}
               className="w-20 h-20 rounded-2xl object-cover ring-4 ring-indigo-500/30 shadow-md"
             />
             <span className="absolute -bottom-2 -right-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow">
@@ -98,7 +99,7 @@ export const StudentAccountModal: React.FC<StudentAccountModalProps> = ({
           <div className="text-center sm:text-left flex-1">
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
               <h2 className="text-2xl font-black text-slate-900 dark:text-white">
-                {profile.name}
+                {profile.isLoggedIn ? profile.name : 'Guest Student'}
               </h2>
               <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
                 profile.role === 'teacher' || profile.role === 'admin'
@@ -110,7 +111,7 @@ export const StudentAccountModal: React.FC<StudentAccountModalProps> = ({
             </div>
 
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 flex items-center justify-center sm:justify-start gap-1">
-              <Mail className="w-3.5 h-3.5 text-slate-400" /> {profile.email}
+              <Mail className="w-3.5 h-3.5 text-slate-400" /> {profile.isLoggedIn ? profile.email : 'Not signed in'}
             </p>
 
             <div className="mt-3 flex flex-wrap items-center justify-center sm:justify-start gap-3 text-xs">

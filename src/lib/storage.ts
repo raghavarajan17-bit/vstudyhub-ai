@@ -17,7 +17,7 @@ export const INITIAL_PROGRESS: UserProgress = {
     xp: 850,
     level: 3,
     levelTitle: 'Silver Scholar',
-    isLoggedIn: true,
+    isLoggedIn: false,
     badges: [
       {
         id: 'badge-1',

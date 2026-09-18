@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { 
   Atom, Search, Moon, Sun, Menu, X, Sparkles, BookOpen, 
   Calculator, BrainCircuit, HelpCircle, Trophy, Layers, Filter, Award, Shield, Newspaper, FileText, Target, Languages
@@ -183,11 +183,11 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <img
                 src={profile.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150'}
-                alt={profile.name}
+                alt={profile.isLoggedIn ? profile.name : ''}
                 className="w-7 h-7 rounded-lg object-cover ring-2 ring-indigo-500/50"
               />
               <span className="hidden md:inline text-xs font-extrabold text-slate-800 dark:text-slate-200 pr-1">
-                {profile.name.split(' ')[0]}
+                {profile.isLoggedIn ? profile.name.split(' ')[0] : 'Sign In'}
               </span>
             </button>
 
@@ -274,5 +274,4 @@ export const Header: React.FC<HeaderProps> = ({
     </header>
   );
 };
-
 

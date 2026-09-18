@@ -10,3 +10,4 @@ coverage/
 *.before-* 
 *.backup 
 *.patch
+gen-lang-client-0612192195-firebase-adminsdk-fbsvc-3d2c7c82a9.json
