@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { 
   User, Mail, Shield, Trophy, Flame, Target, Award, Check, X, 
   BookOpen, Sparkles, LogOut, Lock, LogIn, ExternalLink, Database, CheckCircle2
@@ -57,10 +57,14 @@ export const StudentAccountModal: React.FC<StudentAccountModalProps> = ({
   };
 
   const handleSignOut = async () => {
-    await signOut(auth);
-    onUpdateProfile({ isLoggedIn: false });
-    onClose();
-  };
+  await signOut(auth);
+  onUpdateProfile({
+    name: '',
+    email: '',
+    avatarUrl: '',
+    isLoggedIn: false,
+  });
+};
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
