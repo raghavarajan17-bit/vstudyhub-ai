@@ -4,6 +4,7 @@ import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { ExamBanner } from './components/ExamBanner';
 import { SubjectGrid } from './components/SubjectGrid';
+import GlobalLandingView from './components/GlobalLandingView';
 import { ChapterListView } from './components/ChapterListView';
 import { NoteDetailView } from './components/NoteDetailView';
 import { FormulaSheetView } from './components/FormulaSheetView';
@@ -188,9 +189,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors flex flex-col justify-between selection:bg-blue-500 selection:text-white">
-      
+
       {/* Header */}
-      <Header
+      {activeTab !== 'home' && <Header
         selectedExam={userProgress.selectedExam}
         onExamChange={handleExamChange}
         selectedClass={userProgress.selectedClass}
@@ -204,36 +205,18 @@ export default function App() {
         streakDays={userProgress.streakDays}
         darkMode={darkMode}
         onToggleDarkMode={() => setDarkMode(!darkMode)}
-      />
+      />}
 
       {/* Main Content Area */}
       <main className="flex-1">
-        
+
+
         {/* Overview Tab */}
         {activeTab === 'home' && (
-          <div>
-            <ExamBanner
-              selectedExam={userProgress.selectedExam}
-              onExamChange={handleExamChange}
-              selectedClass={userProgress.selectedClass}
-              onClassChange={handleClassChange}
-              onOpenSearch={() => setIsSearchOpen(true)}
-              onTabChange={handleTabChange}
-        isAdmin={isAdmin}
-            />
-
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <SubjectGrid
-                selectedExam={userProgress.selectedExam}
-                onSelectSubject={(subId) => {
-                  setSelectedSubjectId(subId);
-                  setActiveNoteId(null);
-                }}
-                onTabChange={handleTabChange}
-        isAdmin={isAdmin}
-              />
-            </div>
-          </div>
+          <GlobalLandingView
+            onTabChange={handleTabChange}
+            onOpenAccountModal={() => setIsAccountModalOpen(true)}
+          />
         )}
 
         {/* Subjects & Notes Tab */}
@@ -386,11 +369,11 @@ export default function App() {
       />
 
       {/* Footer */}
-      <Footer
+      {activeTab !== 'home' && <Footer
         onTabChange={handleTabChange}
         isAdmin={isAdmin}
         onExamChange={handleExamChange}
-      />
+      />}
 
     </div>
   );
