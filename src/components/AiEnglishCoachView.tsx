@@ -12,33 +12,14 @@ export const AiEnglishCoachView: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [showPaymentChoice, setShowPaymentChoice] = useState(false);
 
-  const handleStartPro = async () => {
-    if (checkoutLoading) return;
+const handleStartPro = () => {
+  setShowPaymentChoice(true);
+};
 
-    setCheckoutLoading(true);
 
-    try {
-      const response = await fetch('/api/stripe/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}),
-      });
 
-      const data = await response.json();
-
-      if (!response.ok || !data.url) {
-        throw new Error(data.error || 'Unable to start checkout.');
-      }
-
-      window.location.href = data.url;
-    } catch (error) {
-      console.error('Stripe checkout error:', error);
-      alert('Unable to start Pro checkout. Please try again.');
-      setCheckoutLoading(false);
-    }
-  };
 
   const handleStartPractice = async () => {
     if (!promptInput.trim()) return;
@@ -128,6 +109,22 @@ export const AiEnglishCoachView: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
+
+      {showPaymentChoice && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 p-4" role="dialog" aria-modal="true" aria-labelledby="english-payment-title">
+          <div className="w-full max-w-md rounded-2xl border border-white/15 bg-slate-950 p-6 text-white shadow-2xl">
+            <div className="flex items-center justify-between gap-4">
+              <h2 id="english-payment-title" className="text-xl font-bold">Choose your payment</h2>
+              <button type="button" onClick={() => setShowPaymentChoice(false)} className="rounded-lg px-3 py-2 text-slate-300 hover:bg-white/10" aria-label="Close payment options">X</button>
+            </div>
+            <p className="mt-2 text-sm leading-6 text-slate-300">Choose your region and review the price on Razorpay before paying.</p>
+            <a href="https://pages.razorpay.com/pl_TnN9eI4DNdyhoB/view" target="_blank" rel="noopener noreferrer" className="mt-5 block rounded-xl bg-indigo-500 px-4 py-4 text-center font-bold text-white hover:bg-indigo-400">India - INR 1,455/month - Razorpay</a>
+            <a href="https://pages.razorpay.com/pl_TnNCMjqe6B2Yr2/view" target="_blank" rel="noopener noreferrer" className="mt-3 block rounded-xl border border-indigo-400/50 px-4 py-4 text-center font-bold text-white hover:bg-white/5">International - $19/month - Razorpay</a>
+            <p className="mt-4 text-xs leading-5 text-slate-400">Review the billing terms on the payment page before paying.</p>
+          </div>
+        </div>
+      )}
+
       <div className="text-center mb-8">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-xs font-semibold mb-3">
           Global AI English Coach
