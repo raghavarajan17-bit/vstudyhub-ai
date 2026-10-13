@@ -1,4 +1,3 @@
-﻿ 
 import { useState } from "react";
 import {
   ArrowRight,
@@ -61,12 +60,12 @@ const faqs = [
   {
     question: "How much does Pro cost?",
     answer:
-      "The current Pro checkout is configured for $19 per month. Review the amount and billing details on the Stripe checkout page before paying.",
+      "The current Pro checkout is configured for $19 per month. Review the amount and billing details on the Razorpay payment page before paying.",
   },
   {
     question: "How do I cancel or manage my subscription?",
     answer:
-      "Check your Stripe receipt and subscription-management information after purchase. Contact support if you need help managing your subscription.",
+      "Check your Razorpay receipt and subscription-management information after purchase. Contact support if you need help managing your subscription.",
   },
 ];
 
@@ -74,43 +73,12 @@ export default function GlobalLandingView({
   onTabChange,
   onOpenAccountModal,
 }: GlobalLandingViewProps) {
-  const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [checkoutError, setCheckoutError] = useState("");
+  const [showPaymentChoice, setShowPaymentChoice] = useState(false);
 
-  const handleStartPro = async () => {
-    if (checkoutLoading) return;
-
-    setCheckoutLoading(true);
-    setCheckoutError("");
-
-    try {
-      const response = await fetch("/api/stripe/create-checkout-session", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success || !data.url) {
-        throw new Error(
-          data.error || "Checkout could not be opened. Please try again."
-        );
-      }
-
-      window.location.href = data.url;
-    } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Unable to open checkout. Please try again.";
-
-      setCheckoutError(message);
-      setCheckoutLoading(false);
-    }
+  const handleStartPro = () => {
+    setShowPaymentChoice(true);
   };
 
   const openFeature = (tab: string) => {
@@ -155,11 +123,10 @@ export default function GlobalLandingView({
             </button>
             <button
               type="button"
-              onClick={handleStartPro}
-              disabled={checkoutLoading}
+              onClick={() => setShowPaymentChoice(true)}
               className="rounded-xl bg-indigo-500 px-5 py-3 text-sm font-bold hover:bg-indigo-400 disabled:opacity-60"
             >
-              {checkoutLoading ? "Opening..." : "Get Pro"}
+              Get Pro
             </button>
           </nav>
 
@@ -187,13 +154,27 @@ export default function GlobalLandingView({
             <button type="button" onClick={() => openFeature("ai-english-coach")}>
               Try English Coach
             </button>
-            <button type="button" onClick={handleStartPro}>
-              {checkoutLoading ? "Opening Checkout..." : "Get Pro — $19/month"}
+            <button type="button" onClick={() => setShowPaymentChoice(true)}>
+              Get Pro - $19/month
             </button>
           </nav>
         )}
       </header>
 
+      {showPaymentChoice && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 p-4" role="dialog" aria-modal="true" aria-labelledby="payment-choice-title">
+          <div className="w-full max-w-md rounded-2xl border border-white/15 bg-slate-950 p-6 shadow-2xl">
+            <div className="flex items-center justify-between gap-4">
+              <h2 id="payment-choice-title" className="text-xl font-bold">Choose your payment</h2>
+              <button type="button" onClick={() => setShowPaymentChoice(false)} className="rounded-lg px-3 py-2 text-slate-300 hover:bg-white/10" aria-label="Close payment options">×</button>
+            </div>
+            <p className="mt-2 text-sm leading-6 text-slate-400">Choose your region and review the final amount and billing terms on Razorpay before paying.</p>
+            <a href="https://pages.razorpay.com/pl_TnNCMjqe6B2Yr2/view" target="_blank" rel="noopener noreferrer" className="mt-5 block rounded-xl bg-indigo-500 px-4 py-4 text-center font-bold text-white hover:bg-indigo-400">India — ₹1,455/month · Razorpay</a>
+            <a href="https://pages.razorpay.com/pl_TnN9eI4DNdyhoB/view" target="_blank" rel="noopener noreferrer" className="mt-3 block rounded-xl border border-indigo-400/50 px-4 py-4 text-center font-bold text-white hover:bg-white/5">International — $19/month · Razorpay</a>
+            <p className="mt-4 text-xs leading-5 text-slate-500">Pro access may not activate automatically after payment until payment verification is connected.</p>
+          </div>
+        </div>
+      )}
       <main>
         {/* Hero */}
         <section className="relative">
@@ -430,7 +411,7 @@ export default function GlobalLandingView({
                   "Access the available VStudyHub coaching tools",
                   "Practise English and interview skills",
                   "Use one hub for learning and career preparation",
-                  "Secure payment through Stripe Checkout",
+                  "Secure payment through Razorpay",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3 text-sm text-slate-300">
                     <CheckCircle2
@@ -444,23 +425,16 @@ export default function GlobalLandingView({
 
               <button
                 type="button"
-                onClick={handleStartPro}
-                disabled={checkoutLoading}
+                onClick={() => setShowPaymentChoice(true)}
                 className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-500 px-5 py-4 font-bold hover:bg-indigo-400 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <CreditCard size={19} />
-                {checkoutLoading ? "Opening Checkout..." : "Start Pro — $19/month"}
+                Start Pro - $19/month
               </button>
-
-              {checkoutError && (
-                <p role="alert" className="mt-4 text-sm text-red-300">
-                  {checkoutError}
-                </p>
-              )}
 
               <p className="mt-4 text-center text-xs leading-5 text-slate-500">
                 The final price, currency, and billing terms are shown by
-                Stripe before you pay.
+                Razorpay before you pay.
               </p>
             </div>
           </div>
