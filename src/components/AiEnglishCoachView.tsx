@@ -118,8 +118,8 @@ const handleStartPro = () => {
               <button type="button" onClick={() => setShowPaymentChoice(false)} className="rounded-lg px-3 py-2 text-slate-300 hover:bg-white/10" aria-label="Close payment options">X</button>
             </div>
             <p className="mt-2 text-sm leading-6 text-slate-300">Choose your region and review the price on Razorpay before paying.</p>
-            <a href="https://pages.razorpay.com/pl_TnNCMjqe6B2Yr2/view" target="_blank" rel="noopener noreferrer" className="mt-5 block rounded-xl bg-indigo-500 px-4 py-4 text-center font-bold text-white hover:bg-indigo-400">India - INR 1,455/month - Razorpay</a>
-            <a href="https://pages.razorpay.com/pl_TnN9eI4DNdyhoB/view" target="_blank" rel="noopener noreferrer" className="mt-3 block rounded-xl border border-indigo-400/50 px-4 py-4 text-center font-bold text-white hover:bg-white/5">International - $19/month - Razorpay</a>
+            <a href="https://pages.razorpay.com/pl_TnN9eI4DNdyhoB/view" target="_blank" rel="noopener noreferrer" className="mt-5 block rounded-xl bg-indigo-500 px-4 py-4 text-center font-bold text-white hover:bg-indigo-400">India - INR 1,455/month - Razorpay</a>
+            <a href="https://pages.razorpay.com/pl_TnNCMjqe6B2Yr2/view" target="_blank" rel="noopener noreferrer" className="mt-3 block rounded-xl border border-indigo-400/50 px-4 py-4 text-center font-bold text-white hover:bg-white/5">International - $19/month - Razorpay</a>
             <p className="mt-4 text-xs leading-5 text-slate-400">Review the billing terms on the payment page before paying.</p>
           </div>
         </div>
