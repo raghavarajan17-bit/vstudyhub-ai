@@ -1,10 +1,10 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AiEnglishCoachView } from './components/AiEnglishCoachView';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { ExamBanner } from './components/ExamBanner';
 import { SubjectGrid } from './components/SubjectGrid';
-import GlobalLandingView from './components/GlobalLandingView';
+import { GlobalLandingView } from './components/GlobalLandingView';
 import { ChapterListView } from './components/ChapterListView';
 import { NoteDetailView } from './components/NoteDetailView';
 import { FormulaSheetView } from './components/FormulaSheetView';
